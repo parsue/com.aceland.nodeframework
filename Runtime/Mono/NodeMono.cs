@@ -152,8 +152,6 @@ namespace AceLand.NodeSystem.Mono
                 node.Traverse(action);
         }
 
-#if UNITY_EDITOR
-
         [InspectorButton]
         public void SetNodeStructure()
         {
@@ -199,7 +197,5 @@ namespace AceLand.NodeSystem.Mono
                 }
             }
         }
-
-#endif
     }
 }

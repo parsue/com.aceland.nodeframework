@@ -7,7 +7,7 @@ namespace AceLand.NodeSystem.Base
     {
         public ChildNode(INode owner) => _owner = owner;
 
-        protected override void BeforeDispose() => DisposeAll();
+        protected override void DisposeManagedResources() => DisposeAll();
 
         private readonly INode _owner;
         private readonly List<INode> _childNodes = new();

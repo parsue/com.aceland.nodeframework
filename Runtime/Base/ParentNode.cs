@@ -7,7 +7,7 @@ namespace AceLand.NodeSystem.Base
     {
         public ParentNode(INode owner) => _owner = owner;
 
-        protected override void BeforeDispose()
+        protected override void DisposeManagedResources()
         {
             _parentNode[0]?.ChildNode?.Remove(_owner);
             _parentNode = Array.Empty<INode>();

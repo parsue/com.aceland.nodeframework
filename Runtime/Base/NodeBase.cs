@@ -18,7 +18,7 @@ namespace AceLand.NodeSystem.Base
             Nodes.Register(Concrete);
         }
 
-        protected override void BeforeDispose()
+        protected override void DisposeManagedResources()
         {
             Nodes.Unregister(Concrete);
             ParentNode.Dispose();
