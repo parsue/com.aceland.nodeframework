@@ -88,11 +88,14 @@ namespace AceLand.NodeSystem
         {
             var children = new List<T>();
             
-            node.Traverse(n =>
+            foreach (var childNOde in node.ChildNode.Nodes)
             {
-                if (n is not T child) return;
-                children.Add(child);
-            });
+                childNOde.Traverse(n =>
+                {
+                    if (n is not T child) return;
+                    children.Add(child);
+                });
+            }
             
             return children;
         }
