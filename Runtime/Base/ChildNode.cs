@@ -6,6 +6,7 @@ namespace AceLand.NodeSystem.Base
     public class ChildNode : DisposableObject
     {
         public ChildNode(INode owner) => _owner = owner;
+        ~ChildNode() => Dispose(false);
 
         protected override void DisposeManagedResources() => DisposeAll();
 
