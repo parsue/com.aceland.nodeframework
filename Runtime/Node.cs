@@ -22,27 +22,27 @@ namespace AceLand.NodeSystem
             Nodes.Unregister(this);
         }
 
-        public void SetParent(INode node)
+        publi virtualc void SetParent(INode node)
         {
             ParentNode.SetNode(node);
         }
 
-        public void SetChild(INode node)
+        public virtual void SetChild(INode node)
         {
             ChildNode.Add(node);
         }
 
-        public void SetChildren(params INode[] nodes)
+        public virtual void SetChildren(params INode[] nodes)
         {
             ChildNode.Add(nodes);
         }
 
-        public void RemoveChild(INode node)
+        public virtual void RemoveChild(INode node)
         {
             ChildNode.Remove(node);
         }
 
-        public void Traverse(Action<INode> action)
+        public virtual void Traverse(Action<INode> action)
         {
             action(this);
             foreach (var node in ChildNode.Nodes)
