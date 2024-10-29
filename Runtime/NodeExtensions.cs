@@ -75,7 +75,7 @@ namespace AceLand.NodeSystem
             throw new Exception($"ChildNode [{id}] not find");
         }
 
-        public static IEnumerable<T> Childs<T>(this INode node) where T : INode
+        public static IEnumerable<T> Children<T>(this INode node) where T : INode
         {
             foreach (var n in node.ChildNode.Nodes)
             {
@@ -84,18 +84,15 @@ namespace AceLand.NodeSystem
             }
         }
 
-        public static List<T> Children<T>(this INode node) where T : INode
+        public static List<T> ChildrenInAllLevel<T>(this INode node) where T : INode
         {
             var children = new List<T>();
-            
-            foreach (var childNOde in node.ChildNode.Nodes)
+
+            node.Traverse(n =>
             {
-                childNOde.Traverse(n =>
-                {
-                    if (n is not T child) return;
-                    children.Add(child);
-                });
-            }
+                if (n is not T child) return;
+                children.Add(child);
+            });
             
             return children;
         }
