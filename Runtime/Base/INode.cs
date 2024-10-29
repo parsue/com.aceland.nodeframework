@@ -6,7 +6,6 @@ namespace AceLand.NodeSystem.Base
     public interface INode<T> : INode
     {
         T Concrete { get; }
-        void Traverse(Action<T> action);
     }
 
     public interface INode
