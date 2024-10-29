@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using AceLand.Library.Attribute;
-using AceLand.Library.Extensions;
+using AceLand.LocalTools.Attribute;
+using AceLand.LocalTools.Extensions;
 using AceLand.NodeSystem.Base;
 using UnityEngine;
 
@@ -19,11 +19,15 @@ namespace AceLand.NodeSystem.Mono
         [SerializeField] protected MonoBehaviour parentNode;
         [SerializeReference] protected List<MonoBehaviour> childNodes;
 
-        public string Id { get; private set; }
+        public string Id { get => NodeReady ? _id : nodeId ; private set => _id = value; }
+        private string _id;
         public T Concrete { get; private set; }
 
-        public ParentNode ParentNode { get; private set; }
-        public ChildNode ChildNode  { get; private set; }
+        private ParentNode ParentNode { get; set; }
+        ParentNode INode.ParentNode => ParentNode;
+
+        private ChildNode ChildNode  { get; set; }
+        ChildNode INode.ChildNode => ChildNode;
 
         public bool IsActive => gameObject.activeInHierarchy;
         public void SetActive(bool active) => gameObject.SetActive(active);
@@ -33,12 +37,12 @@ namespace AceLand.NodeSystem.Mono
 
         protected bool NodeReady;
 
-        public virtual void OnValidate()
+        protected virtual void OnValidate()
         {
             if (parentNode == null || parentNode is not INodeMono)
                 parentNode = null;
 
-            childNodes ??= new();
+            childNodes ??= new List<MonoBehaviour>();
             List<int> removeList = new();
             for (var i = childNodes.Count - 1; i >= 0; i--)
                 if (childNodes[i] is not INodeMono) removeList.Add(i);
@@ -46,18 +50,18 @@ namespace AceLand.NodeSystem.Mono
                 childNodes.RemoveAt(i);
         }
 
-        public virtual void Awake()
+        protected virtual void Awake()
         {
             Go = gameObject;
             Tr = transform;
             Id = nodeId.IsNullOrEmptyOrWhiteSpace() ? $"{nameof(T)}_{Guid.NewGuid()}" : nodeId;
-            ParentNode = new(this);
-            ChildNode = new(this);
+            ParentNode = new ParentNode(this);
+            ChildNode = new ChildNode(this);
             Concrete = (T)this;
             if (autoRegister) Nodes.Register(Concrete);
         }
 
-        public virtual void Start()
+        protected virtual void Start()
         {
             var pNode = (INodeMono)parentNode;
             var cNodes = childNodes.Cast<INode>().ToArray();
@@ -78,7 +82,7 @@ namespace AceLand.NodeSystem.Mono
             NodeReady = true;
         }
 
-        public virtual void OnDestroy()
+        protected virtual void OnDestroy()
         {
             ParentNode?.Dispose();
             ChildNode?.Dispose();
@@ -94,16 +98,16 @@ namespace AceLand.NodeSystem.Mono
             Id = id;
         }
 
-        public void SetParent(INode parentNode)
+        public void SetParent(INode node)
         {
-            this.parentNode = (MonoBehaviour)parentNode; 
-            ParentNode.SetParent(parentNode);
+            parentNode = (MonoBehaviour)node; 
+            ParentNode.SetNode(node);
         }
 
-        public void SetChild(INode childNode)
+        public void SetChild(INode node)
         {
-            childNodes = new() { (MonoBehaviour)childNode };
-            ChildNode.Add(childNode);
+            childNodes.Add((MonoBehaviour)node);
+            ChildNode.Add(node);
         }
         
         public void SetMonoParent<TConcrete>(INodeMono<TConcrete> node)
@@ -120,19 +124,19 @@ namespace AceLand.NodeSystem.Mono
             node.Concrete.transform.SetParent(Tr);
         }
 
-        public void SetChildren(params INode[] childNodes)
+        public void SetChildren(params INode[] nodes)
         {
             this.childNodes.Clear();
-            foreach (var child in childNodes)
+            foreach (var child in nodes)
             {
                 this.childNodes.Add((MonoBehaviour)child);
                 ChildNode.Add(child);
             }
         }
 
-        public void RemoveChild(INode childNode)
+        public void RemoveChild(INode node)
         {
-            childNodes.Remove((MonoBehaviour)childNode);
+            childNodes.Remove((MonoBehaviour)node);
         }
 
         public virtual void Traverse(Action<INode> action)
