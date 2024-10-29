@@ -46,10 +46,7 @@ namespace AceLand.NodeSystem
         {
             action(this);
             foreach (var node in ChildNode.Nodes)
-            {
-                action(node);
                 node.Traverse(action);
-            }
         }
     }
 }
