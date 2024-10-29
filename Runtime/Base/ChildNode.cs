@@ -10,31 +10,32 @@ namespace AceLand.NodeSystem.Base
         public ChildNode(INode owner, INode[] children)
         {
             _owner = owner;
-            _childNodes.AddRange(children);
+            _nodes.AddRange(children);
         }
         
         ~ChildNode() => Dispose(false);
 
         protected override void DisposeManagedResources()
         {
-            var nodes = _childNodes.ToArray();
+            var nodes = _nodes.ToArray();
             
             foreach (var node in nodes)
                 node.ParentNode.SetAsRoot();
             
-            _childNodes.Clear();
+            _nodes.Clear();
         }
 
         private readonly INode _owner;
-        private readonly List<INode> _childNodes = new();
+        private readonly List<INode> _nodes = new();
         
-        public IEnumerable<INode> Nodes => _childNodes;
-        public int Count => _childNodes.Count;
+        public IEnumerable<INode> Nodes => _nodes;
+        public int Count => _nodes.Count;
+        public bool IsLeaf => _nodes.Count == 0;
 
         internal void Add(INode node)
         {
-            if (_childNodes.Contains(node)) return;
-            _childNodes.Add(node);
+            if (_nodes.Contains(node)) return;
+            _nodes.Add(node);
             node.ParentNode.SetParentFromChildNode(_owner);
         }
 
@@ -46,8 +47,8 @@ namespace AceLand.NodeSystem.Base
 
         internal void AddFromParentNode(INode node)
         {
-            if (_childNodes.Contains(node)) return;
-            _childNodes.Add(node);
+            if (_nodes.Contains(node)) return;
+            _nodes.Add(node);
         }
 
         internal void AddFromParentNode(params INode[] nodes)
@@ -58,8 +59,11 @@ namespace AceLand.NodeSystem.Base
 
         internal void Remove(INode node)
         {
-            if (!_childNodes.Contains(node)) return;
-            _childNodes.Remove(node);
+            if (!_nodes.Contains(node)) return;
+            _nodes.Remove(node);
         }
+
+        internal void Clear() =>
+            _nodes.Clear();
     } 
 }

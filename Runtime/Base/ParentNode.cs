@@ -9,28 +9,27 @@ namespace AceLand.NodeSystem.Base
         public ParentNode(INode owner, INode parent)
         {
             _owner = owner;
-            _parentNode = parent;
+            Node = parent;
         }
 
         ~ParentNode() => Dispose(false);
 
         protected override void DisposeManagedResources()
         {
-            _parentNode?.ChildNode?.Remove(_owner);
-            _parentNode = null;
+            Node?.ChildNode?.Remove(_owner);
+            Node = null;
         }
 
-        public INode Node => _parentNode;
-        public bool IsRoot => _parentNode == null;
+        public INode Node { get; private set; }
+        public bool IsRoot => Node == null;
 
         private readonly INode _owner;
-        private INode _parentNode;
 
         internal void SetNode(INode parentNode)
         {
-            _parentNode?.ChildNode?.Remove(_owner);
-            _parentNode = parentNode;
-            _parentNode?.ChildNode?.AddFromParentNode(_owner);
+            Node?.ChildNode?.Remove(_owner);
+            Node = parentNode;
+            Node?.ChildNode?.AddFromParentNode(_owner);
         }
 
         internal void SetAsRoot()
@@ -40,8 +39,8 @@ namespace AceLand.NodeSystem.Base
 
         internal void SetParentFromChildNode(INode parentNode)
         {
-            _parentNode?.ChildNode?.Remove(_owner);
-            _parentNode = parentNode;
+            Node?.ChildNode?.Remove(_owner);
+            Node = parentNode;
         }
     }
 }

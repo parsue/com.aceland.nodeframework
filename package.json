@@ -14,7 +14,8 @@
   ],
   "dependencies": {
     "com.annulusgames.burst-linq": "1.2.0",
-    "com.unity.nuget.newtonsoft-json": "3.2.1"
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.aceland.taskutils": "1.0.0"
   },
   "documentationUrl": ""
 }

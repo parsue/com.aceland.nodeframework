@@ -1,19 +1,15 @@
 using System;
-using AceLand.LocalTools.Optional;
+using AceLand.Library.Disposable;
+using AceLand.Library.Optional;
 using AceLand.NodeSystem.Base;
 
 namespace AceLand.NodeSystem
 {
-    public partial class Node<T>
+    public partial class Node<T> : DisposableObject
     {
-        internal Node(Option<string> id, INode parentNode, INode[] childNodes, T concrete)
+        protected internal Node(Option<string> id, INode parentNode, INode[] childNodes, T concrete)
         {
-            Initialize(id, parentNode, childNodes, concrete);
-        }
-
-        internal void Initialize(Option<string> id, INode parentNode, INode[] childNodes, T concrete)
-        {
-            Id = id.Reduce(Guid.NewGuid().ToString);
+            Id = id.Reduce($"{nameof(T)}_{Guid.NewGuid()}");
             ParentNode = parentNode is null
                 ? new ParentNode(this)
                 : new ParentNode(this, parentNode);
@@ -23,6 +19,15 @@ namespace AceLand.NodeSystem
             Concrete = concrete;
             
             Nodes.Register(this);
+        }
+
+        ~Node() => Dispose(false);
+
+        protected override void DisposeManagedResources()
+        {
+            ParentNode.Dispose();
+            ChildNode.Dispose();
+            Nodes.Unregister(this);
         }
     }
 }

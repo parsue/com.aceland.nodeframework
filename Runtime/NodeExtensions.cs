@@ -6,6 +6,12 @@ namespace AceLand.NodeSystem
 {
     public static class NodeExtensions
     {
+        public static bool IsRoot(this INode node) =>
+            node.ParentNode.IsRoot;
+
+        public static bool IsLeaf(this INode node) =>
+            node.ChildNode.IsLeaf;
+        
         public static T Root<T>(this INode node) where T : INode
         {
             var parent = node.ParentNode.Node;
@@ -32,6 +38,9 @@ namespace AceLand.NodeSystem
 
             return parent;
         }
+
+        public static void SetParent(this INode node, INode parentNode) =>
+            node.ParentNode.SetNode(parentNode);
         
         public static T Child<T>(this INode node) where T : INode
         {
@@ -54,6 +63,15 @@ namespace AceLand.NodeSystem
             throw new Exception($"ChildNode [{id}] not find");
         }
 
+        public static void AddChild(this INode node, INode childNode) =>
+            node.ChildNode.Add(childNode);
+
+        public static void AddChildren(this INode node, params INode[] childNodes) =>
+            node.ChildNode.Add(childNodes);
+
+        public static void RemoveChild(this INode node, INode childNode) =>
+            node.ChildNode.Remove(childNode);
+        
         public static T Neighbour<T>(this INode node) where T : INode
         {
             foreach (var childNode in node.ParentNode.Node.ChildNode.Nodes)
@@ -95,6 +113,13 @@ namespace AceLand.NodeSystem
             });
             
             return children;
+        }
+
+        public static void Traverse(this INode node, Action<INode> action)
+        {
+            action(node);
+            foreach (var n in node.ChildNode.Nodes)
+                n.Traverse(action);
         }
     }
 }

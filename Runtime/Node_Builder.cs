@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using AceLand.LocalTools.Optional;
+using AceLand.Library.Optional;
 using AceLand.NodeSystem.Base;
 
 namespace AceLand.NodeSystem
@@ -23,9 +23,9 @@ namespace AceLand.NodeSystem
             INodeBuilder WithChildren(params INode[] node);
         }
         
-        public class NodeBuilder : INodeBuilder, INodeBuilderConcreteObject
+        internal class NodeBuilder : INodeBuilder, INodeBuilderConcreteObject
         {
-            private string _id = string.Empty;
+            private string _id;
             private INode _parentNode;
             private readonly List<INode> _childNode = new();
             private T _concrete;
