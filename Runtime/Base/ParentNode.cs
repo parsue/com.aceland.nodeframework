@@ -1,5 +1,4 @@
 ﻿using AceLand.Library.Disposable;
-using System;
 
 namespace AceLand.NodeSystem.Base
 {
@@ -7,37 +6,41 @@ namespace AceLand.NodeSystem.Base
     {
         public ParentNode(INode owner) => _owner = owner;
 
+        public ParentNode(INode owner, INode parent)
+        {
+            _owner = owner;
+            Node = parent;
+        }
+
         ~ParentNode() => Dispose(false);
 
         protected override void DisposeManagedResources()
         {
-            _parentNode[0]?.ChildNode?.Remove(_owner);
-            _parentNode = Array.Empty<INode>();
+            Node?.ChildNode?.Remove(_owner);
+            Node = null;
         }
 
-        public INode Node => _parentNode[0];
-        public bool IsRoot => _parentNode[0] == null;
+        public INode Node { get; private set; }
+        public bool IsRoot => Node == null;
 
         private readonly INode _owner;
-        private INode[] _parentNode = new INode[1];
 
-        internal void SetParent(INode parentNode)
+        internal void SetNode(INode parentNode)
         {
-            _parentNode[0]?.ChildNode?.Remove(_owner);
-            _parentNode = new INode[1] { parentNode };
-            _parentNode[0]?.ChildNode?.AddFromParentNode(_owner);
+            Node?.ChildNode?.Remove(_owner);
+            Node = parentNode;
+            Node?.ChildNode?.AddFromParentNode(_owner);
+        }
+
+        internal void SetAsRoot()
+        {
+            SetNode(null);
         }
 
         internal void SetParentFromChildNode(INode parentNode)
         {
-            _parentNode[0]?.ChildNode?.Remove(_owner);
-            _parentNode = new INode[1] { parentNode };
-        }
-
-        public void Clear()
-        {
-            _parentNode[0]?.ChildNode?.Remove(_owner);
-            _parentNode = new INode[1];
+            Node?.ChildNode?.Remove(_owner);
+            Node = parentNode;
         }
     }
 }

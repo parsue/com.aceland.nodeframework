@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,15 +16,17 @@ namespace AceLand.NodeSystem.Base
         public IEnumerable<INode> List => _nodes;
         public IEnumerable<T> Cast<T>() where T : INode => _nodes.Cast<T>();
         
-        public T GetById<T>(string id) where T : INode
+        public bool TryGetById<T>(string id, out T node) where T : INode
         {
-            foreach (var node in _nodes)
+            foreach (var n in _nodes)
             {
-                if (node.Id != id) continue;
-                return (T)node;
+                if (n.Id != id) continue;
+                node = (T)n;
+                return true;
             }
 
-            return default;
+            node =  default;
+            return false;
         }
     }
 }

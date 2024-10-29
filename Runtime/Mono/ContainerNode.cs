@@ -2,9 +2,9 @@
 
 namespace AceLand.NodeSystem.Mono
 {
-    [AddComponentMenu("AMVR/Node/Container Node")]
-    public class ContainerNode : NodeMono<ContainerNode>
+    [AddComponentMenu("AceLand/Node/Container Node")]
+    public class ContainerNode : MonoNode<ContainerNode>
     {
-        public string NodeId => nodeId;
+        
     }
 }
