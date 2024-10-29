@@ -7,7 +7,6 @@ namespace AceLand.NodeSystem.Base
         where T : MonoBehaviour
     {
         T Concrete { get; }
-        void Traverse(Action<T> action);
 
         void SetMonoParent<TConcrete>(INodeMono<TConcrete> node)
             where TConcrete : MonoBehaviour;
