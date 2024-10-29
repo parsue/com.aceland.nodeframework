@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AceLand.NodeSystem.Base
 {
-    public interface INode<T> : INode
+    public interface INode<out T> : INode
     {
         T Concrete { get; }
     }
