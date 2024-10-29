@@ -135,16 +135,6 @@ namespace AceLand.NodeSystem.Mono
             childNodes.Remove((MonoBehaviour)childNode);
         }
 
-        public virtual void Traverse(Action<T> action)
-        {
-            action(Concrete);
-            foreach (var node in ChildNode.Nodes)
-            {
-                var tNode = (T)node;
-                tNode.Traverse(action);
-            }
-        }
-
         public virtual void Traverse(Action<INode> action)
         {
             action(this);
