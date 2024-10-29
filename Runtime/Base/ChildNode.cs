@@ -6,9 +6,24 @@ namespace AceLand.NodeSystem.Base
     public class ChildNode : DisposableObject
     {
         public ChildNode(INode owner) => _owner = owner;
+
+        public ChildNode(INode owner, INode[] children)
+        {
+            _owner = owner;
+            _childNodes.AddRange(children);
+        }
+        
         ~ChildNode() => Dispose(false);
 
-        protected override void DisposeManagedResources() => DisposeAll();
+        protected override void DisposeManagedResources()
+        {
+            var nodes = _childNodes.ToArray();
+            
+            foreach (var node in nodes)
+                node.ParentNode.SetAsRoot();
+            
+            _childNodes.Clear();
+        }
 
         private readonly INode _owner;
         private readonly List<INode> _childNodes = new();
@@ -26,9 +41,7 @@ namespace AceLand.NodeSystem.Base
         internal void Add(params INode[] nodes)
         {
             foreach (var node in nodes)
-            {
                 Add(node);
-            }
         }
 
         internal void AddFromParentNode(INode node)
@@ -40,25 +53,13 @@ namespace AceLand.NodeSystem.Base
         internal void AddFromParentNode(params INode[] nodes)
         {
             foreach (var node in nodes)
-            {
                 AddFromParentNode(node);
-            }
         }
 
         internal void Remove(INode node)
         {
             if (!_childNodes.Contains(node)) return;
             _childNodes.Remove(node);
-        }
-        
-        private void DisposeAll()
-        {
-            var nodes = _childNodes.ToArray();
-            foreach (var child in nodes)
-            {
-                child?.Dispose();
-            }
-            _childNodes.Clear();
         }
     } 
 }
