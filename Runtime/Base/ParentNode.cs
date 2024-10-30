@@ -1,8 +1,8 @@
 ﻿using AceLand.Library.Disposable;
 
-namespace AceLand.NodeSystem.Base
+namespace AceLand.NodeFramework.Base
 {
-    public class ParentNode : DisposableObject
+    internal class ParentNode : DisposableObject
     {
         public ParentNode(INode owner) => _owner = owner;
 
@@ -16,7 +16,7 @@ namespace AceLand.NodeSystem.Base
 
         protected override void DisposeManagedResources()
         {
-            Node?.ChildNode?.Remove(_owner);
+            Node.ChildNode.Remove(_owner);
             Node = null;
         }
 
@@ -25,22 +25,14 @@ namespace AceLand.NodeSystem.Base
 
         private readonly INode _owner;
 
-        internal void SetNode(INode parentNode)
+        internal void Set(INode parentNode)
         {
-            Node?.ChildNode?.Remove(_owner);
             Node = parentNode;
-            Node?.ChildNode?.AddFromParentNode(_owner);
         }
 
         internal void SetAsRoot()
         {
-            SetNode(null);
-        }
-
-        internal void SetParentFromChildNode(INode parentNode)
-        {
-            Node?.ChildNode?.Remove(_owner);
-            Node = parentNode;
+            Set(null);
         }
     }
 }

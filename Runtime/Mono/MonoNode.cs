@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using AceLand.Library.Attribute;
 using AceLand.Library.Extensions;
-using AceLand.NodeSystem.Base;
+using AceLand.NodeFramework.Base;
 using UnityEngine;
 
-namespace AceLand.NodeSystem.Mono
+namespace AceLand.NodeFramework.Mono
 {
     public abstract class MonoNode<T> : MonoBehaviour, INode<T>, IMonoNode
         where T : MonoBehaviour
@@ -54,20 +54,39 @@ namespace AceLand.NodeSystem.Mono
         {
             Go = gameObject;
             Tr = transform;
-            SetId(nodeId);
-            ParentNode = new ParentNode(this);
-            ChildNode = new ChildNode(this);
-            Concrete = GetComponent<T>();
-            Nodes.Register(this);
         }
 
         protected virtual void Start()
         {
+            SetNode();
+            StartCoroutine(OnNodeReadyProcess());
+        }
+
+        public virtual void Dispose() => Destroy(this);
+
+        protected virtual void OnDestroy()
+        {
+            ParentNode?.Dispose();
+            ChildNode?.Dispose();
+            Nodes.Unregister(this);
+        }
+
+        private void SetNode()
+        {
             var pNode = (INode)parentNode;
             var cNodes = childNodes.Cast<INode>().ToArray();
-            if (pNode != null) this.SetParent(pNode);
-            if (cNodes is { Length: > 0 }) this.AddChildren(cNodes);
-            StartCoroutine(OnNodeReadyProcess());
+            
+            SetId(nodeId);
+            Concrete = GetComponent<T>();
+            ParentNode = pNode == null
+                ? new ParentNode(this)
+                : new ParentNode(this, pNode);
+            ChildNode = cNodes is { Length: > 0 }
+                ? new ChildNode(this, cNodes)
+                : new ChildNode(this);
+            Nodes.Register(this);
+            
+            _nodeReady = true;
         }
 
         private IEnumerator OnNodeReadyProcess()
@@ -79,17 +98,7 @@ namespace AceLand.NodeSystem.Mono
 
         protected virtual void StartAfterNodeBuilt()
         {
-            _nodeReady = true;
         }
-
-        protected virtual void OnDestroy()
-        {
-            ParentNode?.Dispose();
-            ChildNode?.Dispose();
-            Nodes.Unregister(this);
-        }
-
-        public virtual void Dispose() => Destroy(this);
         
         public void SetId(string id)
         {
@@ -121,8 +130,8 @@ namespace AceLand.NodeSystem.Mono
 
         private void FindAndSetParentNode()
         {
-            if (transform.parent != null && transform.parent.TryGetComponent<IMonoNode>(out var nodeMono))
-                parentNode = (MonoBehaviour)nodeMono;
+            if (transform.parent != null && transform.parent.TryGetComponent<IMonoNode>(out var monoNode))
+                parentNode = (MonoBehaviour)monoNode;
             else
                 parentNode = null;
         }

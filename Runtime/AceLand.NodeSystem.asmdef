@@ -1,6 +1,6 @@
 {
-    "name": "AceLand.NodeSystem",
-    "rootNamespace": "AceLand.NodeSystem",
+    "name": "AceLand.NodeFramework",
+    "rootNamespace": "AceLand.NodeFramework",
     "references": [
         "GUID:afcc6e9dc133dcd49bde72cc59fe0906",
         "GUID:0b6e3ff925df76b408774ed4b623807b",

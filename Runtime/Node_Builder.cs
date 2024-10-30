@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using AceLand.Library.Optional;
-using AceLand.NodeSystem.Base;
+using AceLand.NodeFramework.Base;
 
-namespace AceLand.NodeSystem
+namespace AceLand.NodeFramework
 {
     public partial class Node<T>
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AceLand.NodeSystem
+namespace AceLand.NodeFramework
 {
     internal static class GridNodeBootstrapper
     {

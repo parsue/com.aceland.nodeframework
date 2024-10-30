@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AceLand.NodeSystem.Base
+namespace AceLand.NodeFramework.Base
 {
     internal static class Nodes
     {

@@ -1,6 +1,4 @@
-using System;
-
-namespace AceLand.NodeSystem.Base
+namespace AceLand.NodeFramework.Base
 {
     public interface INode<out T> : INode
         where T : class

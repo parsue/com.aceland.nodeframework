@@ -1,9 +1,9 @@
-using AceLand.Library.Disposable;
 using System.Collections.Generic;
+using AceLand.Library.Disposable;
 
-namespace AceLand.NodeSystem.Base
+namespace AceLand.NodeFramework.Base
 {
-    public class ChildNode : DisposableObject
+    internal class ChildNode : DisposableObject
     {
         public ChildNode(INode owner) => _owner = owner;
 
@@ -17,12 +17,10 @@ namespace AceLand.NodeSystem.Base
 
         protected override void DisposeManagedResources()
         {
-            var nodes = _nodes.ToArray();
-            
-            foreach (var node in nodes)
+            foreach (var node in _nodes)
                 node.ParentNode.SetAsRoot();
-            
-            _nodes.Clear();
+
+            Clear();
         }
 
         private readonly INode _owner;
@@ -32,11 +30,13 @@ namespace AceLand.NodeSystem.Base
         public int Count => _nodes.Count;
         public bool IsLeaf => _nodes.Count == 0;
 
+        internal bool Contains(INode node) =>
+            _nodes.Contains(node);
+
         internal void Add(INode node)
         {
             if (_nodes.Contains(node)) return;
             _nodes.Add(node);
-            node.ParentNode.SetParentFromChildNode(_owner);
         }
 
         internal void Add(params INode[] nodes)
@@ -45,25 +45,15 @@ namespace AceLand.NodeSystem.Base
                 Add(node);
         }
 
-        internal void AddFromParentNode(INode node)
-        {
-            if (_nodes.Contains(node)) return;
-            _nodes.Add(node);
-        }
-
-        internal void AddFromParentNode(params INode[] nodes)
-        {
-            foreach (var node in nodes)
-                AddFromParentNode(node);
-        }
-
         internal void Remove(INode node)
         {
             if (!_nodes.Contains(node)) return;
             _nodes.Remove(node);
         }
 
-        internal void Clear() =>
+        internal void Clear()
+        {
             _nodes.Clear();
+        }
     } 
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AceLand.NodeSystem.Base
+namespace AceLand.NodeFramework.Base
 {
     public interface IMonoNode
     {

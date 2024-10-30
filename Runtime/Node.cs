@@ -1,6 +1,6 @@
-using AceLand.NodeSystem.Base;
+using AceLand.NodeFramework.Base;
 
-namespace AceLand.NodeSystem
+namespace AceLand.NodeFramework
 {
     public partial class Node<T> : INode<T>
         where T : class
