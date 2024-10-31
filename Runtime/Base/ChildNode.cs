@@ -18,7 +18,7 @@ namespace AceLand.NodeFramework.Base
         protected override void DisposeManagedResources()
         {
             foreach (var node in _nodes)
-                node.ParentNode.SetAsRoot();
+                node?.ParentNode?.SetAsRoot();
 
             Clear();
         }
@@ -53,7 +53,7 @@ namespace AceLand.NodeFramework.Base
 
         internal void Clear()
         {
-            _nodes.Clear();
+            _nodes?.Clear();
         }
     } 
 }

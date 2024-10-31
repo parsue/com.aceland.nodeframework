@@ -16,7 +16,7 @@ namespace AceLand.NodeFramework.Base
 
         protected override void DisposeManagedResources()
         {
-            Node.ChildNode.Remove(_owner);
+            Node?.ChildNode?.Remove(_owner);
             Node = null;
         }
 
