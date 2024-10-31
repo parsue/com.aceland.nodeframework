@@ -13,18 +13,18 @@ namespace AceLand.NodeFramework.Mono
         where T : MonoBehaviour
     {
         [Header("Node for Mono")]
-        [SerializeField] protected string nodeId;
-        [SerializeField] protected MonoBehaviour parentNode;
-        [SerializeReference] protected List<MonoBehaviour> childNodes;
+        [SerializeField] private protected string nodeId;
+        [SerializeField] private protected MonoBehaviour parentNode;
+        [SerializeReference] private protected List<MonoBehaviour> childNodes;
 
         public string Id { get => NodeReady ? _id : nodeId ; private set => _id = value; }
         private string _id;
         public T Concrete { get; private set; }
 
-        private ParentNode ParentNode { get; set; }
+        private protected ParentNode ParentNode { get; set; }
         ParentNode INode.ParentNode => ParentNode;
 
-        private ChildNode ChildNode  { get; set; }
+        private protected ChildNode ChildNode  { get; set; }
         ChildNode INode.ChildNode => ChildNode;
 
         public bool IsActive => gameObject.activeInHierarchy;
@@ -96,6 +96,7 @@ namespace AceLand.NodeFramework.Mono
 
         protected virtual void StartAfterNodeBuilt()
         {
+            // override this function to run codes required NodeTree ready
         }
         
         public void SetId(string id)
