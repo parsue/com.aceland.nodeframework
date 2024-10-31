@@ -13,9 +13,9 @@ namespace AceLand.NodeFramework.Mono
         where T : MonoBehaviour
     {
         [Header("Node for Mono")]
-        [SerializeField] private protected string nodeId;
-        [SerializeField] private protected MonoBehaviour parentNode;
-        [SerializeReference] private protected List<MonoBehaviour> childNodes;
+        [SerializeField] private string nodeId;
+        [SerializeField] internal protected MonoBehaviour parentNode;
+        [SerializeReference] internal protected List<MonoBehaviour> childNodes;
 
         public string Id { get => NodeReady ? _id : nodeId ; private set => _id = value; }
         private string _id;
