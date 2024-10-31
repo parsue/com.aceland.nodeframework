@@ -34,7 +34,7 @@ namespace AceLand.NodeFramework.Mono
         public GameObject Go { get; private set; }
         public Transform Tr { get; private set; }
 
-        bool IMonoNode.NodeReady => _nodeReady;
+        protected bool IMonoNode.NodeReady => _nodeReady;
         private bool _nodeReady;
 
         protected virtual void OnValidate()
