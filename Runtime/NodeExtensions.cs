@@ -94,7 +94,7 @@ namespace AceLand.NodeFramework
 
         public static INode<T> Child<T>(this INode node, string id) where T : class
         {
-            var childNode = node.Child();
+            var childNode = node.Child(id);
             if (childNode is not INode<T> n)
                 throw new Exception($"ChildNode [{id}] not find");
 
