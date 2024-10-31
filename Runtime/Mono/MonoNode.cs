@@ -17,7 +17,7 @@ namespace AceLand.NodeFramework.Mono
         [SerializeField] protected MonoBehaviour parentNode;
         [SerializeReference] protected List<MonoBehaviour> childNodes;
 
-        public string Id { get => _nodeReady ? _id : nodeId ; private set => _id = value; }
+        public string Id { get => NodeReady ? _id : nodeId ; private set => _id = value; }
         private string _id;
         public T Concrete { get; private set; }
 
@@ -33,9 +33,7 @@ namespace AceLand.NodeFramework.Mono
 
         public GameObject Go { get; private set; }
         public Transform Tr { get; private set; }
-
-        protected bool IMonoNode.NodeReady => _nodeReady;
-        private bool _nodeReady;
+        public bool NodeReady { get; private protected set; }
 
         protected virtual void OnValidate()
         {
@@ -86,7 +84,7 @@ namespace AceLand.NodeFramework.Mono
                 : new ChildNode(this);
             Nodes.Register(this);
             
-            _nodeReady = true;
+            NodeReady = true;
         }
 
         private IEnumerator OnNodeReadyProcess()
