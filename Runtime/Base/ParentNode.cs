@@ -2,7 +2,7 @@
 
 namespace AceLand.NodeFramework.Base
 {
-    internal class ParentNode : DisposableObject
+    public class ParentNode : DisposableObject
     {
         public ParentNode(INode owner) => _owner = owner;
 

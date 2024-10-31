@@ -21,10 +21,10 @@ namespace AceLand.NodeFramework.Mono
         private string _id;
         public T Concrete { get; private set; }
 
-        private protected ParentNode ParentNode { get; set; }
+        internal protected ParentNode ParentNode { get; private set; }
         ParentNode INode.ParentNode => ParentNode;
 
-        private protected ChildNode ChildNode  { get; set; }
+        internal protected ChildNode ChildNode  { get; private set; }
         ChildNode INode.ChildNode => ChildNode;
 
         public bool IsActive => gameObject.activeInHierarchy;
@@ -33,7 +33,7 @@ namespace AceLand.NodeFramework.Mono
 
         public GameObject Go { get; private set; }
         public Transform Tr { get; private set; }
-        public bool NodeReady { get; private protected set; }
+        public bool NodeReady { get; private set; }
 
         protected virtual void OnValidate()
         {

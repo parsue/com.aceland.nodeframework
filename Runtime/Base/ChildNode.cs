@@ -3,7 +3,7 @@ using AceLand.Library.Disposable;
 
 namespace AceLand.NodeFramework.Base
 {
-    internal class ChildNode : DisposableObject
+    public class ChildNode : DisposableObject
     {
         public ChildNode(INode owner) => _owner = owner;
 
