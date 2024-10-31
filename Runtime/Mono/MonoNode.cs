@@ -52,6 +52,9 @@ namespace AceLand.NodeFramework.Mono
         {
             Go = gameObject;
             Tr = transform;
+            SetId(nodeId);
+            Concrete = GetComponent<T>();
+            Nodes.Register(this);
         }
 
         protected virtual void Start()
@@ -74,24 +77,19 @@ namespace AceLand.NodeFramework.Mono
             var pNode = (INode)parentNode;
             var cNodes = childNodes.Cast<INode>().ToArray();
             
-            SetId(nodeId);
-            Concrete = GetComponent<T>();
             ParentNode = pNode == null
                 ? new ParentNode(this)
                 : new ParentNode(this, pNode);
             ChildNode = cNodes is { Length: > 0 }
                 ? new ChildNode(this, cNodes)
                 : new ChildNode(this);
-            Nodes.Register(this);
-            
-            NodeReady = true;
         }
 
         private IEnumerator OnNodeReadyProcess()
         {
             yield return null;
-            
             StartAfterNodeBuilt();
+            NodeReady = true;
         }
 
         protected virtual void StartAfterNodeBuilt()
@@ -111,6 +109,13 @@ namespace AceLand.NodeFramework.Mono
         {
             FindAndSetParentNode();
             FindAndSetChildNode();
+            
+#if UNITY_EDITOR
+
+            UnityEditor.EditorUtility.SetDirty(this);
+
+#endif
+            
         }
 
         [InspectorButton]
@@ -125,6 +130,13 @@ namespace AceLand.NodeFramework.Mono
                     monoNode.ClearNodeStructure();
                 }
             }
+            
+#if UNITY_EDITOR
+
+            UnityEditor.EditorUtility.SetDirty(this);
+
+#endif
+
         }
 
         private void FindAndSetParentNode()
