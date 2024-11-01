@@ -105,7 +105,7 @@ namespace AceLand.NodeFramework.Mono
         }
 
         [InspectorButton]
-        void IMonoNode.SetNodeStructure()
+        public void SetNodeStructure()
         {
             FindAndSetParentNode();
             FindAndSetChildNode();
@@ -119,7 +119,7 @@ namespace AceLand.NodeFramework.Mono
         }
 
         [InspectorButton]
-        void IMonoNode.ClearNodeStructure()
+        public void ClearNodeStructure()
         {
             parentNode = null;
             childNodes.Clear();
