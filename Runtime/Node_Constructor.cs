@@ -1,7 +1,7 @@
 using System;
 using AceLand.Library.Disposable;
 using AceLand.Library.Optional;
-using AceLand.NodeFramework.Base;
+using AceLand.NodeFramework.Core;
 
 namespace AceLand.NodeFramework
 {

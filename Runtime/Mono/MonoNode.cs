@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AceLand.Library.Attribute;
 using AceLand.Library.Extensions;
-using AceLand.NodeFramework.Base;
+using AceLand.NodeFramework.Core;
 using UnityEngine;
 
 namespace AceLand.NodeFramework.Mono
@@ -21,10 +21,10 @@ namespace AceLand.NodeFramework.Mono
         private string _id;
         public T Concrete { get; private set; }
 
-        internal protected ParentNode ParentNode { get; private set; }
+        internal ParentNode ParentNode { get; private set; }
         ParentNode INode.ParentNode => ParentNode;
 
-        internal protected ChildNode ChildNode  { get; private set; }
+        internal ChildNode ChildNode  { get; private set; }
         ChildNode INode.ChildNode => ChildNode;
 
         public bool IsActive => gameObject.activeInHierarchy;
@@ -96,7 +96,7 @@ namespace AceLand.NodeFramework.Mono
         {
             // override this function to run codes required NodeTree ready
         }
-        
+
         public void SetId(string id)
         {
             var adjId = id.IsNullOrEmptyOrWhiteSpace() ? $"{nameof(T)}_{Guid.NewGuid()}" : id;
@@ -105,7 +105,7 @@ namespace AceLand.NodeFramework.Mono
         }
 
         [InspectorButton]
-        public void SetNodeStructure()
+        void IMonoNode.SetNodeStructure()
         {
             FindAndSetParentNode();
             FindAndSetChildNode();
@@ -119,7 +119,7 @@ namespace AceLand.NodeFramework.Mono
         }
 
         [InspectorButton]
-        public void ClearNodeStructure()
+        void IMonoNode.ClearNodeStructure()
         {
             parentNode = null;
             childNodes.Clear();

@@ -1,4 +1,4 @@
-namespace AceLand.NodeFramework.Base
+namespace AceLand.NodeFramework.Core
 {
     public interface INode<out T> : INode
         where T : class

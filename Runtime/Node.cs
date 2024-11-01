@@ -1,4 +1,4 @@
-using AceLand.NodeFramework.Base;
+using AceLand.NodeFramework.Core;
 
 namespace AceLand.NodeFramework
 {
@@ -7,10 +7,10 @@ namespace AceLand.NodeFramework
     {
         public string Id { get; }
 
-        private ParentNode ParentNode { get; }
+        internal ParentNode ParentNode { get; }
         ParentNode INode.ParentNode => ParentNode;
 
-        private ChildNode ChildNode  { get; }
+        internal ChildNode ChildNode  { get; }
         ChildNode INode.ChildNode => ChildNode;
         
         public T Concrete { get; }

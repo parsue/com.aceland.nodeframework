@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace AceLand.NodeFramework.Base
+namespace AceLand.NodeFramework.Core
 {
-    public interface IMonoNode
+    internal interface IMonoNode
     {
         void SetActive(bool active);
         bool IsActive { get; }
@@ -10,7 +10,7 @@ namespace AceLand.NodeFramework.Base
         Transform Tr { get; }
         GameObject Go { get; }
         void SetId(string id);
-        void SetNodeStructure();
-        void ClearNodeStructure();
+        internal void SetNodeStructure();
+        internal void ClearNodeStructure();
     }
 }

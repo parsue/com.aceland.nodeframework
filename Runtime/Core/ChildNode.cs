@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using AceLand.Library.Disposable;
 
-namespace AceLand.NodeFramework.Base
+namespace AceLand.NodeFramework.Core
 {
-    public class ChildNode : DisposableObject
+    internal class ChildNode : DisposableObject
     {
         public ChildNode(INode owner) => _owner = owner;
 

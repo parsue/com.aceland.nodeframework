@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AceLand.NodeFramework.Base
+namespace AceLand.NodeFramework.Core
 {
     internal class NodeList
     {

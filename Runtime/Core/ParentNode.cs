@@ -1,8 +1,8 @@
 ﻿using AceLand.Library.Disposable;
 
-namespace AceLand.NodeFramework.Base
+namespace AceLand.NodeFramework.Core
 {
-    public class ParentNode : DisposableObject
+    internal class ParentNode : DisposableObject
     {
         public ParentNode(INode owner) => _owner = owner;
 

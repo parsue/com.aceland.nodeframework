@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using AceLand.Library.Optional;
-using AceLand.NodeFramework.Base;
+using AceLand.NodeFramework.Core;
 
 namespace AceLand.NodeFramework
 {
