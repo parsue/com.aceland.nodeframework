@@ -9,10 +9,10 @@ namespace AceLand.NodeFramework
 {
     public partial class Node<T>
     {
-        public static Promise<Node<T>> Get() =>
+        public static Task<Node<T>> Get() =>
             GetNode();
 
-        public static Promise<Node<T>> Get(string id) =>
+        public static Task<Node<T>> Get(string id) =>
             GetNode(id);
 
         public static IEnumerable<Node<T>> GetNodes() =>
