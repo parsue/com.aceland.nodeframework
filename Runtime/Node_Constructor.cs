@@ -18,7 +18,7 @@ namespace AceLand.NodeFramework
                 : new ChildNode(this, childNodes);
             Concrete = concrete;
             
-            Nodes.Register(this);
+            Nodes.Register(concrete);
         }
 
         ~Node() => Dispose(false);

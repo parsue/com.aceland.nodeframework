@@ -8,10 +8,10 @@ namespace AceLand.NodeFramework
     public static class NodeExtensions
     {
         public static bool IsRoot(this INode node) =>
-            node.ParentNode.IsRoot;
+            node.ParentNode?.IsRoot ?? true;
 
         public static bool IsLeaf(this INode node) =>
-            node.ChildNode.IsLeaf;
+            node.ChildNode?.IsLeaf ?? true;
         
         public static INode Root(this INode node)
         {
@@ -29,25 +29,25 @@ namespace AceLand.NodeFramework
             return parent;
         }
         
-        public static INode<T> Root<T>(this INode node) where T : class
+        public static T Root<T>(this INode node) where T : class
         {
             var parent = node.Root();
-
-            if (parent is not INode<T> parentNode)
-                throw new Exception($"wrong type of {nameof(T)}");
-
-            return parentNode;
+        
+            if (parent is T parentNode)
+                return parentNode;
+            
+            throw new Exception($"wrong type of {nameof(T)}");
         }
         
         public static INode Parent(this INode node) =>
             node.ParentNode.Node;
         
-        public static INode<T> Parent<T>(this INode node) where T : class
+        public static T Parent<T>(this INode node) where T : class
         {
-            if (node.ParentNode.Node is not INode<T> parent)
-                throw new Exception($"wrong type of {nameof(T)}");
-
-            return parent;
+            if (node.ParentNode.Node is T parent)
+                return parent;
+            
+            throw new Exception($"wrong type of {nameof(T)}");
         }
 
         public static void SetParent(this INode node, INode parentNode)
@@ -57,8 +57,8 @@ namespace AceLand.NodeFramework
             if (!node.IsRoot())
                 node.Parent().ChildNode.Remove(node);
             
-            parentNode.ChildNode.Add(node);
-            node.ParentNode.Set(parentNode);
+            parentNode.ChildNode?.Add(node);
+            node.ParentNode?.Set(parentNode);
         }
 
         public static void SetAsRoot(this INode node)
@@ -71,45 +71,42 @@ namespace AceLand.NodeFramework
         
         public static INode Child(this INode node) =>
             node.ChildNode.Nodes.First();
-        
-        public static INode<T> Child<T>(this INode node) where T : class
+
+        public static T Child<T>(this INode node) where T : class
         {
             foreach (var childNode in node.ChildNode.Nodes)
-            {
-                if (childNode is not INode<T> n) continue;
-                return n;
-            }
+                if (childNode is T n) return n;
+            
             throw new Exception($"ChildNode [{nameof(T)}] not find");
         }
 
         public static INode Child(this INode node, string id)
         {
             foreach (var childNode in node.ChildNode.Nodes)
-            {
-                if (childNode.Id != id) continue;
-                return childNode;
-            }
+                if (childNode.Id == id) return childNode;
+            
             throw new Exception($"ChildNode [{id}] not find");
         }
 
-        public static INode<T> Child<T>(this INode node, string id) where T : class
+        public static T Child<T>(this INode node, string id) where T : class
         {
-            var childNode = node.Child(id);
-            if (childNode is not INode<T> n)
-                throw new Exception($"ChildNode [{id}] not find");
-
-            return n;
+            foreach (var childNode in node.ChildNode.Nodes)
+            {
+                if (childNode.Id != id) continue;
+                if (childNode is T n) return n;
+            }
+            
+            throw new Exception($"ChildNode [{id}] of [{nameof(T)}] not find");
         }
         
         public static IEnumerable<INode> Children(this INode node) =>
             node.ChildNode.Nodes;
 
-        public static IEnumerable<INode<T>> Children<T>(this INode node) where T : class
+        public static IEnumerable<T> Children<T>(this INode node) where T : class
         {
-            foreach (var n in node.ChildNode.Nodes)
+            foreach (var childNode in node.ChildNode.Nodes)
             {
-                if (n is not INode<T> child) continue;
-                yield return child;
+                if (childNode is T n) yield return n;
             }
         }
 
@@ -125,16 +122,15 @@ namespace AceLand.NodeFramework
             return nodes;
         }
 
-        public static IEnumerable<INode<T>> Children<T>(this INode node, string id) where T : class
+        public static IEnumerable<T> Children<T>(this INode node, string id) where T : class
         {
-            var nodes = new List<INode<T>>();
+            var nodes = new List<T>();
             foreach (var childNode in node.ChildNode.Nodes)
             {
                 if (childNode.Id != id) continue;
-                if (childNode is not INode<T> n) continue;
-                nodes.Add(n);
+                if (childNode is T n) nodes.Add(n);
             }
-
+        
             return nodes;
         }
 
@@ -146,17 +142,17 @@ namespace AceLand.NodeFramework
             return children;
         }
 
-        public static IEnumerable<INode<T>> ChildrenInAllLevel<T>(this INode node) where T : class
+        public static IEnumerable<T> ChildrenInAllLevel<T>(this INode node) where T : class
         {
-            var children = new List<INode<T>>();
-
+            var children = new List<T>();
+        
             node.Traverse(n =>
             {
-                if (n is not INode<T> child) return;
+                if (n is not T child) return;
                 children.Add(child);
             });
             
-            if (node is INode<T> tn && children.Contains(tn))
+            if (node is T tn && children.Contains(tn))
                 children.Remove(tn);
             
             return children;
@@ -196,13 +192,11 @@ namespace AceLand.NodeFramework
         public static INode Neighbour(this INode node) =>
             node.Parent().ChildNode.Nodes.First();
         
-        public static INode<T> Neighbour<T>(this INode node) where T : class
+        public static T Neighbour<T>(this INode node) where T : class
         {
             foreach (var childNode in node.Parent().ChildNode.Nodes)
-            {
-                if (childNode is not INode<T> n) continue;
-                return n;
-            }
+                if (childNode is T n) return n;
+
             throw new Exception($"ChildNode [{nameof(T)}] not find");
         }
 
@@ -213,32 +207,30 @@ namespace AceLand.NodeFramework
                 if (childNode.Id != id) continue;
                 return childNode;
             }
+            
             throw new Exception($"ChildNode [{id}] not find");
         }
 
-        public static INode<T> Neighbour<T>(this INode node, string id) where T : class
+        public static T Neighbour<T>(this INode node, string id) where T : class
         {
             foreach (var childNode in node.ParentNode.Node.ChildNode.Nodes)
             {
                 if (childNode.Id != id) continue;
-                if (childNode is not INode<T> n) continue;
-                return n;
+                if (childNode is T n) return n;
             }
+            
             throw new Exception($"ChildNode [{id}] not find");
         }
 
         public static IEnumerable<INode> Neighbours(this INode node) =>
             node.Parent().ChildNode.Nodes;
         
-        public static IEnumerable<INode<T>> Neighbours<T>(this INode node) where T : class
+        public static IEnumerable<T> Neighbours<T>(this INode node) where T : class
         {
-            var nodes = new List<INode<T>>();
+            var nodes = new List<T>();
             foreach (var childNode in node.Parent().ChildNode.Nodes)
-            {
-                if (childNode is not INode<T> n) continue;
-                nodes.Add(n);
-            }
-
+                if (childNode is T n) nodes.Add(n);
+        
             return nodes;
         }
 

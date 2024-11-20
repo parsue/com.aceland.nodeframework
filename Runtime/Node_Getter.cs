@@ -3,29 +3,40 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AceLand.NodeFramework.Core;
 using AceLand.TaskUtils;
-using UnityEngine;
 
 namespace AceLand.NodeFramework
 {
     public partial class Node<T>
     {
-        public static Task<Node<T>> Get() =>
+        public static Task<T> GetAsync() =>
             GetNode();
 
-        public static Task<Node<T>> Get(string id) =>
+        public static Task<T> GetAsync(string id) =>
             GetNode(id);
 
-        public static IEnumerable<Node<T>> GetNodes() =>
-            Nodes.GetNodesByType<Node<T>>();
+        public static Task<T> GetAsync<TEnum>(TEnum id) where TEnum : Enum =>
+            GetNode(id.ToString());
 
-        private static async Task<Node<T>> GetNode()
+        public static T Get() =>
+            Nodes.TryGetNode(out T node) ? node : null;
+
+        public static T Get(string id) =>
+            Nodes.TryGetNode(id, out T node) ? node : null;
+
+        public static T Get<TEnum>(TEnum id) where TEnum : Enum =>
+            Get(id.ToString());
+
+        public static IEnumerable<T> GetNodes() =>
+            Nodes.GetNodesByType<T>();
+
+        private static async Task<T> GetNode()
         {
             var aliveToken = Promise.ApplicationAliveToken;
-            var targetTime = Time.realtimeSinceStartup + NodeUtils.Settings.NodeGetterTimeout;
+            var targetTime = DateTime.Now.AddSeconds(NodeUtils.Settings.NodeGetterTimeout);
     
-            while (!aliveToken.IsCancellationRequested && Time.realtimeSinceStartup < targetTime)
+            while (!aliveToken.IsCancellationRequested && DateTime.Now < targetTime)
             {
-                var arg = Nodes.TryGetNode(out Node<T> node);
+                var arg = Nodes.TryGetNode(out T node);
                 if (arg) return node;
                 
                 await Task.Yield();
@@ -35,14 +46,14 @@ namespace AceLand.NodeFramework
             throw new Exception(msg);
         }
 
-        private static async Task<Node<T>> GetNode(string id)
+        private static async Task<T> GetNode(string id)
         {
             var aliveToken = Promise.ApplicationAliveToken;
-            var targetTime = Time.realtimeSinceStartup + 1.5f;
+            var targetTime = DateTime.Now.AddSeconds(NodeUtils.Settings.NodeGetterTimeout);
     
-            while (!aliveToken.IsCancellationRequested && Time.realtimeSinceStartup < targetTime)
+            while (!aliveToken.IsCancellationRequested && DateTime.Now < targetTime)
             {
-                var arg = Nodes.TryGetNode(id, out Node<T> node);
+                var arg = Nodes.TryGetNode(id, out T node);
                 if (arg) return node;
                 
                 await Task.Yield();

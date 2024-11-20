@@ -25,12 +25,12 @@ namespace AceLand.NodeFramework.Core
 
         private readonly INode _owner;
 
-        internal void Set(INode parentNode)
+        public void Set(INode parentNode)
         {
             Node = parentNode;
         }
 
-        internal void SetAsRoot()
+        public void SetAsRoot()
         {
             Set(null);
         }

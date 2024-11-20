@@ -14,8 +14,9 @@ namespace AceLand.NodeFramework.Mono
     {
         [Header("Node for Mono")]
         [SerializeField] private string nodeId;
-        [SerializeField] internal protected MonoBehaviour parentNode;
-        [SerializeReference] internal protected List<MonoBehaviour> childNodes;
+        [SerializeField] protected internal MonoBehaviour parentNode;
+        [SerializeReference] protected internal List<MonoBehaviour> childNodes;
+        [SerializeField] private bool autoRegistry = true;
 
         public string Id { get => NodeReady ? _id : nodeId ; private set => _id = value; }
         private string _id;
@@ -54,7 +55,7 @@ namespace AceLand.NodeFramework.Mono
             Tr = transform;
             SetId(nodeId);
             Concrete = GetComponent<T>();
-            Nodes.Register(this);
+            if (autoRegistry) Register();
         }
 
         protected virtual void Start()
@@ -67,10 +68,13 @@ namespace AceLand.NodeFramework.Mono
 
         protected virtual void OnDestroy()
         {
+            Unregister();
             ParentNode?.Dispose();
             ChildNode?.Dispose();
-            Nodes.Unregister(this);
         }
+        
+        protected void Register() => Nodes.Register(this);
+        protected void Unregister() => Nodes.Unregister(this);
 
         private void SetNode()
         {
@@ -111,9 +115,7 @@ namespace AceLand.NodeFramework.Mono
             FindAndSetChildNode();
             
 #if UNITY_EDITOR
-
             UnityEditor.EditorUtility.SetDirty(this);
-
 #endif
             
         }
@@ -132,9 +134,7 @@ namespace AceLand.NodeFramework.Mono
             }
             
 #if UNITY_EDITOR
-
             UnityEditor.EditorUtility.SetDirty(this);
-
 #endif
 
         }
