@@ -12,7 +12,7 @@ namespace AceLand.NodeFramework.Core
             var type = typeof(T);
             if (!NODES_BY_TYPE.ContainsKey(type)) NODES_BY_TYPE[type] = new NodeList();
             if (NODES_BY_TYPE[type].Contains(node))
-                throw new Exception($"Nodes.Register Error: node [{node.Id}] already exists");
+                throw new Exception($"Nodes.Register Error: node {typeof(T).Name} [{node.Id}] already exists");
                 
             NODES_BY_TYPE[type].Add(node);
         }

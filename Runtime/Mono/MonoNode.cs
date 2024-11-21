@@ -10,7 +10,7 @@ using UnityEngine;
 namespace AceLand.NodeFramework.Mono
 {
     public abstract class MonoNode<T> : MonoBehaviour, INode<T>, IMonoNode
-        where T : MonoBehaviour
+        where T : MonoBehaviour, INode
     {
         [Header("Node for Mono")]
         [SerializeField] private string nodeId;
@@ -73,8 +73,8 @@ namespace AceLand.NodeFramework.Mono
             ChildNode?.Dispose();
         }
         
-        protected void Register() => Nodes.Register(this);
-        protected void Unregister() => Nodes.Unregister(this);
+        protected void Register() => Nodes.Register(Concrete);
+        protected void Unregister() => Nodes.Unregister(Concrete);
 
         private void SetNode()
         {
