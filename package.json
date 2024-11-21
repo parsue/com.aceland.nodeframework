@@ -1,6 +1,6 @@
 {
   "name": "com.aceland.nodeframework",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "displayName": "AceLand Node Framework",
   "description": "AceLand Node Framework is a framework designed for Unity.",
   "unity": "2022.3",
@@ -18,8 +18,8 @@
     "node"
   ],
   "dependencies": {
-    "com.aceland.library": "1.0.2",
-    "com.aceland.taskutils": "1.0.2"
+    "com.aceland.library": "1.0.3",
+    "com.aceland.taskutils": "1.0.3"
   },
   "publishConfig": {
     "registry": "https://package.openupm.com"
