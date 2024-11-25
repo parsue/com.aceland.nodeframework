@@ -6,13 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.0.5] - 2024-11-25
+## [1.0.6] - 2024-11-25
 
 ### Fixed
 - MonoNode register comparer issue, always node exists or no error on exists.
 
 ### Add
-- add Enable/Disable Auto Register button in MonoNode. 
+- add Context Menu to Enable/Disable Auto Register of all children of selected Game Object. 
 
 ## [1.0.4] - 2024-11-24
 

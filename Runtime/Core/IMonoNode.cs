@@ -2,7 +2,7 @@
 
 namespace AceLand.NodeFramework.Core
 {
-    internal interface IMonoNode
+    public interface IMonoNode
     {
         void SetActive(bool active);
         bool IsActive { get; }

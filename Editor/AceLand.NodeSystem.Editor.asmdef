@@ -2,8 +2,8 @@
     "name": "AceLand.NodeFramework.Editor",
     "rootNamespace": "AceLand.NodeFramework",
     "references": [
-        "GUID:0b6e3ff925df76b408774ed4b623807b",
         "GUID:e22d3ac111af48b41a9c9affb9890e2e",
+        "GUID:0b6e3ff925df76b408774ed4b623807b",
         "GUID:9811992f43a01034cbf814ec6fbeeb44"
     ],
     "includePlatforms": [

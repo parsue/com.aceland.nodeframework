@@ -165,25 +165,5 @@ namespace AceLand.NodeFramework.Mono
                 }
             }
         }
-
-        [InspectorButton]
-        public void EnableAutoRegister() => SetAutoRegister(true);
-
-        [InspectorButton]
-        public void DisableAutoRegister() => SetAutoRegister(false);
-
-        private void SetAutoRegister(bool value)
-        {
-            AutoRegistry = value;
-            foreach (Transform child in transform)
-            {
-                foreach (var monoNode in child.GetComponents<IMonoNode>())
-                    monoNode.AutoRegistry = value;
-            }
-            
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
-#endif
-        }
     }
 }
