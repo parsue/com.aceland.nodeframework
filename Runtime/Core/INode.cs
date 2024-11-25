@@ -1,3 +1,5 @@
+using System;
+
 namespace AceLand.NodeFramework.Core
 {
     public interface INode<out T> : INode
@@ -6,7 +8,7 @@ namespace AceLand.NodeFramework.Core
         T Concrete { get; }
     }
 
-    public interface INode
+    public interface INode : IComparable, IComparable<INode>, IEquatable<INode>
     {
         string Id { get; }
         internal ParentNode ParentNode { get; }

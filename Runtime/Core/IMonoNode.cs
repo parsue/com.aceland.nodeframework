@@ -7,6 +7,7 @@ namespace AceLand.NodeFramework.Core
         void SetActive(bool active);
         bool IsActive { get; }
         bool NodeReady { get; }
+        bool AutoRegistry { get; set; }
         Transform Tr { get; }
         GameObject Go { get; }
         void SetId(string id);

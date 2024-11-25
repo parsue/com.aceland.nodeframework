@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace AceLand.NodeFramework.Mono
 {
-    public abstract class MonoNode<T> : MonoBehaviour, INode<T>, IMonoNode
+    public abstract partial class MonoNode<T> : MonoBehaviour, INode<T>, IMonoNode
         where T : MonoBehaviour, INode
     {
         [Header("Node for Mono")]
@@ -35,6 +35,12 @@ namespace AceLand.NodeFramework.Mono
         public GameObject Go { get; private set; }
         public Transform Tr { get; private set; }
         public bool NodeReady { get; private set; }
+
+        public bool AutoRegistry
+        {
+            get => autoRegistry;
+            set => autoRegistry = value;
+        }
 
         protected virtual void OnValidate()
         {
@@ -158,6 +164,26 @@ namespace AceLand.NodeFramework.Mono
                     monoNode.SetNodeStructure();
                 }
             }
+        }
+
+        [InspectorButton]
+        public void EnableAutoRegister() => SetAutoRegister(true);
+
+        [InspectorButton]
+        public void DisableAutoRegister() => SetAutoRegister(false);
+
+        private void SetAutoRegister(bool value)
+        {
+            AutoRegistry = value;
+            foreach (Transform child in transform)
+            {
+                foreach (var monoNode in child.GetComponents<IMonoNode>())
+                    monoNode.AutoRegistry = value;
+            }
+            
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
     }
 }

@@ -1,27 +1,10 @@
 using System;
 using AceLand.NodeFramework.Core;
 
-namespace AceLand.NodeFramework
+namespace AceLand.NodeFramework.Mono
 {
-    public partial class Node<T> : INode<T>
-        where T : class, INode
+    public abstract partial class MonoNode<T>
     {
-        public string Id { get; }
-
-        private ParentNode ParentNode { get; }
-        ParentNode INode.ParentNode => ParentNode;
-
-        private ChildNode ChildNode  { get; }
-        ChildNode INode.ChildNode => ChildNode;
-        
-        public T Concrete { get; }
-        
-        public bool Equals(INode x, INode y)
-        {
-            if (x == null && y == null) return true;
-            if (x == null || y == null) return false;
-            return x.Id == y.Id;
-        }
         public bool Equals(INode other)
         {
             if (other == null) return false;
