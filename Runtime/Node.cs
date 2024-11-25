@@ -56,7 +56,7 @@ namespace AceLand.NodeFramework
             if (obj is INode other)
                 return CompareTo(other);
 
-            throw new ArgumentException("Object is not a MyClass");
+            throw new ArgumentException("Object is not a Node");
         }
     }
 }
