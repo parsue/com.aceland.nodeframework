@@ -17,6 +17,7 @@ namespace AceLand.NodeFramework.Editor.ProjectSettingsProvider
         
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
+            base.OnActivate(searchContext, rootElement);
             Settings = NodeFrameworkSettings.GetSerializedSettings();
         }
 
