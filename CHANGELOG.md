@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.0.10] - 2024-11-26
+## [1.0.11] - 2024-11-26
 
 ### Modify
 - [Editor] Undo functional for Project Settings
