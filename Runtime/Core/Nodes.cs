@@ -7,7 +7,7 @@ namespace AceLand.NodeFramework.Core
     {
         private static readonly Dictionary<Type, NodeList> NODES_BY_TYPE = new();
 
-        public static void Register<T>(T node) where T : class, INode
+        public static void Register<T>(T node) where T : INode
         {
             var type = typeof(T);
             if (!NODES_BY_TYPE.ContainsKey(type)) NODES_BY_TYPE[type] = new NodeList();
@@ -17,7 +17,7 @@ namespace AceLand.NodeFramework.Core
             NODES_BY_TYPE[type].Add(node);
         }
 
-        public static void Unregister<T>(T node) where T : class, INode
+        public static void Unregister<T>(T node) where T : INode
         {
             var type = typeof(T);
             if (!NODES_BY_TYPE.TryGetValue(type, out var list)) return;
@@ -26,7 +26,7 @@ namespace AceLand.NodeFramework.Core
             NODES_BY_TYPE[type].Remove(node);
         }
 
-        public static bool TryGetNode<T>(out T node) where T : class, INode
+        public static bool TryGetNode<T>(out T node) where T : INode
         {
             var type = typeof(T);
             if (NODES_BY_TYPE.TryGetValue(type, out var nodes))
@@ -39,7 +39,7 @@ namespace AceLand.NodeFramework.Core
             return false;
         }
 
-        public static bool TryGetNode<T>(string id, out T node) where T : class, INode
+        public static bool TryGetNode<T>(string id, out T node) where T : INode
         {
             var type = typeof(T);
             var checkType = NODES_BY_TYPE.TryGetValue(type, out var nodes);
@@ -51,7 +51,7 @@ namespace AceLand.NodeFramework.Core
             return false;
         }
         
-        public static IEnumerable<T> GetNodesByType<T>() where T : class, INode
+        public static IEnumerable<T> GetNodesByType<T>() where T : INode
         {
             var type = typeof(T);
             if (!NODES_BY_TYPE.TryGetValue(type, out var nodes)) yield break;
@@ -60,7 +60,7 @@ namespace AceLand.NodeFramework.Core
                 yield return (T)node;
         }
 
-        public static bool Contains<T>(INode node) where T : class, INode
+        public static bool Contains<T>(INode node) where T : INode
         {
             var type = typeof(T);
             return NODES_BY_TYPE.TryGetValue(type, out var nodes) && nodes.Contains(node);
