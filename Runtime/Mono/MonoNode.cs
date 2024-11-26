@@ -61,7 +61,7 @@ namespace AceLand.NodeFramework.Mono
             Tr = transform;
             SetId(nodeId);
             Concrete = GetComponent<T>();
-            if (autoRegistry) Register();
+            if (autoRegistry) this.Register();
         }
 
         protected virtual void Start()
@@ -74,13 +74,10 @@ namespace AceLand.NodeFramework.Mono
 
         protected virtual void OnDestroy()
         {
-            Unregister();
+            this.Unregister();
             ParentNode?.Dispose();
             ChildNode?.Dispose();
         }
-        
-        protected void Register() => Nodes.Register(Concrete);
-        protected void Unregister() => Nodes.Unregister(Concrete);
 
         private void SetNode()
         {

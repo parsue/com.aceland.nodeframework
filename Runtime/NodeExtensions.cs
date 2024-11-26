@@ -5,7 +5,7 @@ using AceLand.NodeFramework.Core;
 
 namespace AceLand.NodeFramework
 {
-    public static class NodeExtensions
+    public static partial class NodeExtensions
     {
         public static bool IsRoot(this INode node) =>
             node.ParentNode?.IsRoot ?? true;
