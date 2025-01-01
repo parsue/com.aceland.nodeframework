@@ -2,11 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.13] - 2025-01-01
+
+### Fixed
+- [MonoNode] Registry wrong type through Extension
+
 ## [1.0.12] - 2025-01-01
 
 ### Modify
 - [MonoNode] StartAfterNodeBuilt after Awake
 - [MonoNode] Auto build Node Structure
+
+### Fixed
 - [MonoNode] Null checking on Extension Functions
 
 ## [1.0.11] - 2024-11-26
@@ -18,7 +25,7 @@ All notable changes to this project will be documented in this file.
 
 ### Add
 - add Getter for MonoNode.
-
+[package.json](package.json)
 ## [1.0.7] - 2024-11-25
 
 ### Fixed
