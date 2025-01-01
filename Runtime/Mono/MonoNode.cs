@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using AceLand.Library.Attribute;
 using AceLand.Library.Extensions;
 using AceLand.NodeFramework.Core;
+using AceLand.TaskUtils;
 using UnityEngine;
 
 namespace AceLand.NodeFramework.Mono
@@ -14,8 +12,6 @@ namespace AceLand.NodeFramework.Mono
     {
         [Header("Node for Mono")]
         [SerializeField] private string nodeId;
-        [SerializeField] protected internal MonoBehaviour parentNode;
-        [SerializeReference] protected internal List<MonoBehaviour> childNodes;
         [SerializeField] private bool autoRegistry = true;
 
         public string Id { get => NodeReady ? _id : nodeId ; private set => _id = value; }
@@ -42,64 +38,35 @@ namespace AceLand.NodeFramework.Mono
             set => autoRegistry = value;
         }
 
-        protected virtual void OnValidate()
-        {
-            if (parentNode == null || parentNode is not INode)
-                parentNode = null;
-
-            childNodes ??= new List<MonoBehaviour>();
-            List<int> removeList = new();
-            for (var i = childNodes.Count - 1; i >= 0; i--)
-                if (childNodes[i] is not INode) removeList.Add(i);
-            foreach (var i in removeList)
-                childNodes.RemoveAt(i);
-        }
-
         protected virtual void Awake()
         {
             Go = gameObject;
             Tr = transform;
             SetId(nodeId);
             Concrete = GetComponent<T>();
-            if (autoRegistry) Register();
-        }
-
-        protected virtual void Start()
-        {
-            SetNode();
-            StartCoroutine(OnNodeReadyProcess());
+            ParentNode = new ParentNode(Concrete);
+            ChildNode = new ChildNode(Concrete);
+            if (autoRegistry) Concrete.Register();
+            
+            var parentNode = FindParentNode();
+            var childNodes = FindChildNodes();
+            this.LateStart(parentNode, childNodes)
+                .Catch(e => Debug.LogError(e, this));
         }
 
         public virtual void Dispose() => Destroy(this);
 
         protected virtual void OnDestroy()
         {
-            Unregister();
+            Concrete.Unregister();
             ParentNode?.Dispose();
             ChildNode?.Dispose();
         }
-        
-        protected void Register() => Nodes.Register(Concrete);
-        protected void Unregister() => Nodes.Unregister(Concrete);
 
-        private void SetNode()
+        internal void OnNodeReadyProcess()
         {
-            var pNode = (INode)parentNode;
-            var cNodes = childNodes.Cast<INode>().ToArray();
-            
-            ParentNode = pNode == null
-                ? new ParentNode(this)
-                : new ParentNode(this, pNode);
-            ChildNode = cNodes is { Length: > 0 }
-                ? new ChildNode(this, cNodes)
-                : new ChildNode(this);
-        }
-
-        private IEnumerator OnNodeReadyProcess()
-        {
-            yield return null;
-            StartAfterNodeBuilt();
             NodeReady = true;
+            StartAfterNodeBuilt();
         }
 
         protected virtual void StartAfterNodeBuilt()
@@ -114,56 +81,21 @@ namespace AceLand.NodeFramework.Mono
             Id = adjId;
         }
 
-        [InspectorButton]
-        public void SetNodeStructure()
-        {
-            FindAndSetParentNode();
-            FindAndSetChildNode();
-            
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
-#endif
-            
-        }
+        private MonoBehaviour FindParentNode() =>
+            transform.parent != null && transform.parent.TryGetComponent<IMonoNode>(out var monoNode)
+                ? (MonoBehaviour)monoNode
+                : null;
 
-        [InspectorButton]
-        public void ClearNodeStructure()
+        private List<MonoBehaviour> FindChildNodes()
         {
-            parentNode = null;
-            childNodes.Clear();
+            var nodes = new List<MonoBehaviour>();
             foreach (Transform child in transform)
             {
                 foreach (var monoNode in child.GetComponents<IMonoNode>())
-                {
-                    monoNode.ClearNodeStructure();
-                }
+                    nodes.Add((MonoBehaviour)monoNode);
             }
-            
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
-#endif
 
-        }
-
-        private void FindAndSetParentNode()
-        {
-            if (transform.parent != null && transform.parent.TryGetComponent<IMonoNode>(out var monoNode))
-                parentNode = (MonoBehaviour)monoNode;
-            else
-                parentNode = null;
-        }
-
-        private void FindAndSetChildNode()
-        {
-            childNodes = new List<MonoBehaviour>();
-            foreach (Transform child in transform)
-            {
-                foreach (var monoNode in child.GetComponents<IMonoNode>())
-                {
-                    childNodes.Add((MonoBehaviour)monoNode);
-                    monoNode.SetNodeStructure();
-                }
-            }
+            return nodes;
         }
     }
 }

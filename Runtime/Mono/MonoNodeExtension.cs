@@ -1,13 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AceLand.NodeFramework.Core;
+using AceLand.TaskUtils;
 using UnityEngine;
 
 namespace AceLand.NodeFramework.Mono
 {
     public static class MonoNodeExtension
     {
+        internal static Task LateStart<T>(this MonoNode<T> node, MonoBehaviour parentNode, IEnumerable<MonoBehaviour> childNodes)
+            where T : MonoBehaviour, INode
+        {
+            return Task.Run(() =>
+                {
+                    var pNode = (INode)parentNode;
+                    var cNodes = childNodes.Cast<INode>().ToArray();
+            
+                    if (pNode == null) node.ParentNode.SetAsRoot();
+                    else node.ParentNode.Set(pNode);
+            
+                    if (cNodes is { Length: > 0 })
+                        node.ChildNode.Add(cNodes);
+
+                    Promise.EnqueueToDispatcher(node.OnNodeReadyProcess);
+                },
+                Promise.ApplicationAliveToken
+            );
+        }
+        
         public static T MonoParent<T>(this INode node) where T : MonoBehaviour, INode
         {
             if (node.ParentNode.Node is T parent)
@@ -110,7 +132,7 @@ namespace AceLand.NodeFramework.Mono
             
             foreach (var childNode in childNodes)
             {
-                var mono = childNode as MonoBehaviour;
+                if (childNode is not MonoBehaviour mono) continue;
                 node.AddChild(childNode);
                 mono.transform.SetParent(node.Tr);
             }
@@ -130,7 +152,7 @@ namespace AceLand.NodeFramework.Mono
         {
             foreach (var childNode in node.ChildNode.Nodes)
             {
-                var mono = childNode as MonoBehaviour;
+                if (childNode is not MonoBehaviour mono) continue;
                 childNode.ParentNode.SetAsRoot();
                 mono.transform.SetParent(null);
             }

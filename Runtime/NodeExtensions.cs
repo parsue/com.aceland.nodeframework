@@ -7,6 +7,12 @@ namespace AceLand.NodeFramework
 {
     public static class NodeExtensions
     {
+        public static void Register(this INode node) =>
+            Nodes.Register(node);
+        
+        public static void Unregister(this INode node) =>
+            Nodes.Unregister(node);
+        
         public static bool IsRoot(this INode node) =>
             node.ParentNode?.IsRoot ?? true;
 

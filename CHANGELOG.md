@@ -2,9 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.0.12] - 2025-01-01
 
----
+### Modify
+- [MonoNode] StartAfterNodeBuilt after Awake
+- [MonoNode] Auto build Node Structure
+- [MonoNode] Null checking on Extension Functions
 
 ## [1.0.11] - 2024-11-26
 

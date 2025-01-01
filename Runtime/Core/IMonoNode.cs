@@ -11,7 +11,5 @@ namespace AceLand.NodeFramework.Core
         Transform Tr { get; }
         GameObject Go { get; }
         void SetId(string id);
-        void SetNodeStructure();
-        void ClearNodeStructure();
     }
 }
