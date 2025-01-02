@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.14] - 2025-01-02
+
+### Fixed
+- [MonoNode] MonoNode comparing on Node not build not correct. Empty ID of either node will not be equal.
+
 ## [1.0.13] - 2025-01-01
 
 ### Fixed
