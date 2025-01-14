@@ -1,6 +1,6 @@
 {
   "name": "com.aceland.nodeframework",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "displayName": "AceLand Node Framework",
   "description": "AceLand Node Framework is a framework designed for Unity.\n\nPlease visit our [Git Book](https://aceland-workshop.gitbook.io/aceland-unity-packages).",
   "unity": "2022.3",
@@ -18,7 +18,7 @@
     "node"
   ],
   "dependencies": {
-    "com.aceland.library": "1.0.6",
+    "com.aceland.library": "1.0.8",
     "com.aceland.taskutils": "1.0.4"
   },
   "publishConfig": {
