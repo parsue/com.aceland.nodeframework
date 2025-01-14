@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.15] - 2025-01-14
+
+### Fixed
+- [MonoNode] ChildNodes not complete ready when ParentNode StartAfterNodeBuilt() invoked. This is caused by non-sequently initialized of Components.  Fixed on LateStart Task control.
+
 ## [1.0.14] - 2025-01-02
 
 ### Fixed
