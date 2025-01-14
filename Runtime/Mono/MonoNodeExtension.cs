@@ -17,12 +17,20 @@ namespace AceLand.NodeFramework.Mono
                 {
                     var pNode = (INode)parentNode;
                     var cNodes = childNodes.Cast<INode>().ToArray();
+                    var isRoot = pNode == null;
+                    var isLeaf = cNodes is { Length: 0 };
             
-                    if (pNode == null) node.ParentNode.SetAsRoot();
+                    if (isRoot) node.ParentNode.SetAsRoot();
                     else node.ParentNode.Set(pNode);
-            
-                    if (cNodes is { Length: > 0 })
-                        node.ChildNode.Add(cNodes);
+
+                    if (!isLeaf) node.ChildNode.Add(cNodes);
+
+                    var cMonoNode = node.ChildNode.Nodes.Select(n => (IMonoNode)n);
+                    if (!isLeaf)
+                    {
+                        while (!cMonoNode.All(n => n.NodeReady))
+                            Task.Yield();
+                    }
 
                     Promise.EnqueueToDispatcher(node.OnNodeReadyProcess);
                 },
