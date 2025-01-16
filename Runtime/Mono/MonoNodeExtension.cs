@@ -13,6 +13,7 @@ namespace AceLand.NodeFramework.Mono
         internal static Task LateStart<T>(this MonoNode<T> node, MonoBehaviour parentNode, IEnumerable<MonoBehaviour> childNodes)
             where T : MonoBehaviour, INode
         {
+            var token = Promise.ApplicationAliveToken;
             return Task.Run(() =>
                 {
                     var pNode = (INode)parentNode;
@@ -28,13 +29,24 @@ namespace AceLand.NodeFramework.Mono
                     var cMonoNode = node.ChildNode.Nodes.Select(n => (IMonoNode)n);
                     if (!isLeaf)
                     {
-                        while (!cMonoNode.All(n => n.NodeReady))
+                        bool isAllReady = false;
+                        while (!isAllReady && !token.IsCancellationRequested)
+                        {
+                            isAllReady = true;
+                            foreach (var node in cMonoNode)
+                            {
+                                if (node.NodeReady) continue;
+                                isAllReady = false;
+                                break;
+                            }
                             Task.Yield();
-                    }
+                        }
 
-                    Promise.EnqueueToDispatcher(node.OnNodeReadyProcess);
+                        if (token.IsCancellationRequested)
+                            throw new OperationCanceledException();
+                    }
                 },
-                Promise.ApplicationAliveToken
+                token
             );
         }
         
