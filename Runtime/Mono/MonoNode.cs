@@ -51,7 +51,7 @@ namespace AceLand.NodeFramework.Mono
             var parentNode = FindParentNode();
             var childNodes = FindChildNodes();
             this.LateStart(parentNode, childNodes)
-                .Catch(e => Debug.LogError(e, this));
+                .Then(OnNodeReadyProcess);
         }
 
         public virtual void Dispose() => Destroy(this);
@@ -63,7 +63,7 @@ namespace AceLand.NodeFramework.Mono
             ChildNode?.Dispose();
         }
 
-        internal void OnNodeReadyProcess()
+        private void OnNodeReadyProcess()
         {
             NodeReady = true;
             StartAfterNodeBuilt();
