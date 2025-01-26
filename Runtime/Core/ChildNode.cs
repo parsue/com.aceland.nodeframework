@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AceLand.Library.Disposable;
+using AceLand.NodeFramework.Mono;
 
 namespace AceLand.NodeFramework.Core
 {
@@ -40,6 +41,12 @@ namespace AceLand.NodeFramework.Core
         }
 
         internal void Add(params INode[] nodes)
+        {
+            foreach (var node in nodes)
+                Add(node);
+        }
+
+        internal void Add(IEnumerable<INode> nodes)
         {
             foreach (var node in nodes)
                 Add(node);

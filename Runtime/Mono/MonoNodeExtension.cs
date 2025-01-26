@@ -1,41 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AceLand.NodeFramework.Core;
-using AceLand.TaskUtils;
 using UnityEngine;
 
 namespace AceLand.NodeFramework.Mono
 {
     public static class MonoNodeExtension
     {
-        internal static Task LateStart<T>(this MonoNode<T> node, MonoBehaviour parentNode, IEnumerable<MonoBehaviour> childNodes)
-            where T : MonoBehaviour, INode
+        internal static void InitialMonoNode(this MonoNode monoNode)
         {
-            return Task.Run(() =>
-                {
-                    var pNode = (INode)parentNode;
-                    var cNodes = childNodes.Cast<INode>().ToArray();
-                    var isRoot = pNode == null;
-                    var isLeaf = cNodes is { Length: 0 };
+            if (monoNode.NodeReady) return;
+            if (monoNode.FindParentNode() != null) return;
             
-                    if (isRoot) node.ParentNode.SetAsRoot();
-                    else node.ParentNode.Set(pNode);
+            var allNode = new List<MonoNode>();
+            var nodeList = new List<MonoNode> { monoNode };
 
-                    if (!isLeaf) node.ChildNode.Add(cNodes);
+            while (nodeList.Count > 0)
+            {
+                var node = nodeList[0];
+                allNode.Add(node);
+                nodeList.Remove(node);
+                
+                node.InitialNode();
+                
+                var parentNode = node.FindParentNode() as MonoNode;
+                var isRoot = parentNode == null;
+                if (isRoot) node.ParentNode.SetAsRoot();
+                else node.ParentNode.Set(parentNode);
 
-                    var cMonoNode = node.ChildNode.Nodes.Select(n => (IMonoNode)n);
-                    if (!isLeaf)
-                    {
-                        while (!cMonoNode.All(n => n.NodeReady))
-                            Task.Yield();
-                    }
+                var childNodes = node.FindChildNodes().Cast<MonoNode>().ToArray();
+                var isLeaf = childNodes is { Length: 0 };
+                if (isLeaf) continue;
+                
+                node.ChildNode.Add(childNodes.Cast<INode>());
+                nodeList.AddRange(childNodes);
+            }
 
-                    Promise.EnqueueToDispatcher(node.OnNodeReadyProcess);
-                },
-                Promise.ApplicationAliveToken
-            );
+            foreach (var node in allNode)
+            {
+                node.OnNodeReadyProcess();
+            }
         }
         
         public static T MonoParent<T>(this INode node) where T : MonoBehaviour, INode
@@ -44,6 +49,16 @@ namespace AceLand.NodeFramework.Mono
                 return parent;
             
             throw new Exception($"wrong type of {nameof(T)}");
+        }
+
+        public static T MonoNeighbour<T>(this INode node) where T : MonoBehaviour, INode
+        {
+            return node.Parent().MonoChild<T>();
+        }
+
+        public static T MonoNeighbour<T>(this INode node, string id) where T : MonoBehaviour, INode
+        {
+            return node.Parent().MonoChild<T>(id);
         }
         
         public static T MonoChild<T>(this INode node) where T : MonoBehaviour, INode

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.16] - 2025-01-25
+
+### Fixed
+- [MonoNode] initial whole tree by root node, and call StartAfterNodeBuilt() after initialization of whole tree.
+### Added
+- [MonoNode] add extension .MonoNeighbour<T>() and .MonoNeighbour<T>(id).
+### Modify
+- [Editor] AceLand Project Setting as Tree structure
+
 ## [1.0.15] - 2025-01-14
 
 ### Fixed
@@ -10,7 +19,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.14] - 2025-01-02
 
 ### Fixed
-- [MonoNode] MonoNode comparing on Node not build not correct. Empty ID of either node will not be equal.
+- [MonoNode] comparing on Node not build not correct. Empty ID of either node will not be equal.
 
 ## [1.0.13] - 2025-01-01
 

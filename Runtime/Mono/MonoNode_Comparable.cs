@@ -6,13 +6,13 @@ namespace AceLand.NodeFramework.Mono
 {
     public abstract partial class MonoNode<T>
     {
-        public bool Equals(INode other)
+        public new bool Equals(INode other)
         {
             if (other == null) return false;
             if (other.Id.IsNullOrEmptyOrWhiteSpace()) return false;
-            if (this.Id.IsNullOrEmptyOrWhiteSpace()) return false;
+            if (Id.IsNullOrEmptyOrWhiteSpace()) return false;
             
-            return Id == other.Id && this.GetType() == other.GetType();
+            return Id == other.Id && GetType() == other.GetType();
         }
 
         // Override Object.Equals
@@ -29,27 +29,26 @@ namespace AceLand.NodeFramework.Mono
         }
 
         // IComparable<MyClass>
-        public int CompareTo(INode other)
+        public new int CompareTo(INode other)
         {
             if (other == null) return 1;
             if (other.Id.IsNullOrEmptyOrWhiteSpace()) return 1;
-            if (this.Id.IsNullOrEmptyOrWhiteSpace()) return 1;
-            if (this.GetType() != other.GetType()) return 1;
+            if (Id.IsNullOrEmptyOrWhiteSpace()) return 1;
+            if (GetType() != other.GetType()) return 1;
             
-            return string.Compare(Id, other.Id); 
+            return string.CompareOrdinal(Id, other.Id); 
         }
 
         // IComparable
-        public int CompareTo(object obj)
+        public new int CompareTo(object obj)
         {
             if (obj == null) return 1;
             if (obj is not INode other) return 1;
             if (other.Id.IsNullOrEmptyOrWhiteSpace()) return 1;
             if (other.Id.IsNullOrEmptyOrWhiteSpace()) return 1;
-            if (this.GetType() != obj.GetType()) return 1;
+            if (GetType() != obj.GetType()) return 1;
 
             return CompareTo(other);
-            throw new ArgumentException("Object is not a MyClass");
         }
     }
 }

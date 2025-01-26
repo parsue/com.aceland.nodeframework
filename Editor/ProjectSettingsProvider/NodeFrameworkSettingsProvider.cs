@@ -7,7 +7,7 @@ namespace AceLand.NodeFramework.Editor.ProjectSettingsProvider
 {
     public class NodeFrameworkSettingsProvider : AceLandSettingsProvider
     {
-        public const string SETTINGS_NAME = "Project/AceLand Node Framework";
+        public const string SETTINGS_NAME = "Project/AceLand Packages/Node Framework";
         
         private NodeFrameworkSettingsProvider(string path, SettingsScope scope = SettingsScope.User) 
             : base(path, scope) { }

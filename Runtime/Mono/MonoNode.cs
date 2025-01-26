@@ -2,35 +2,35 @@ using System;
 using System.Collections.Generic;
 using AceLand.Library.Extensions;
 using AceLand.NodeFramework.Core;
-using AceLand.TaskUtils;
 using UnityEngine;
 
 namespace AceLand.NodeFramework.Mono
 {
-    public abstract partial class MonoNode<T> : MonoBehaviour, INode<T>, IMonoNode
-        where T : MonoBehaviour, INode
+    public abstract class MonoNode : MonoBehaviour, IMonoNode, INode
     {
         [Header("Node for Mono")]
-        [SerializeField] private string nodeId;
-        [SerializeField] private bool autoRegistry = true;
+        [SerializeField] private protected string nodeId;
+        [SerializeField] private protected bool autoRegistry = true;
 
-        public string Id { get => NodeReady ? _id : nodeId ; private set => _id = value; }
+        public string Id { get => NodeReady ? _id : nodeId ; protected set => _id = value; }
         private string _id;
-        public T Concrete { get; private set; }
-
-        internal ParentNode ParentNode { get; private set; }
+        
+        internal ParentNode ParentNode { get; set; }
         ParentNode INode.ParentNode => ParentNode;
 
-        internal ChildNode ChildNode  { get; private set; }
+        internal ChildNode ChildNode  { get; set; }
         ChildNode INode.ChildNode => ChildNode;
 
-        public bool IsActive => gameObject.activeInHierarchy;
 
-        public void SetActive(bool active) => gameObject.SetActive(active);
+        public virtual bool IsActive => gameObject.activeInHierarchy;
 
-        public GameObject Go { get; private set; }
-        public Transform Tr { get; private set; }
-        public bool NodeReady { get; private set; }
+        public virtual void SetActive(bool active) => gameObject.SetActive(active);
+
+        public virtual void Dispose() => Destroy(this);
+
+        public GameObject Go { get; protected set; }
+        public Transform Tr { get; protected set; }
+        public bool NodeReady { get; protected set; }
 
         public bool AutoRegistry
         {
@@ -38,29 +38,15 @@ namespace AceLand.NodeFramework.Mono
             set => autoRegistry = value;
         }
 
-        protected virtual void Awake()
+        public virtual void SetId(string id)
         {
-            Go = gameObject;
-            Tr = transform;
-            SetId(nodeId);
-            Concrete = GetComponent<T>();
-            ParentNode = new ParentNode(Concrete);
-            ChildNode = new ChildNode(Concrete);
-            if (autoRegistry) Concrete.Register();
-            
-            var parentNode = FindParentNode();
-            var childNodes = FindChildNodes();
-            this.LateStart(parentNode, childNodes)
-                .Catch(e => Debug.LogError(e, this));
+            var adjId = id.IsNullOrEmptyOrWhiteSpace() ? Guid.NewGuid().ToString() : id;
+            nodeId = adjId;
+            Id = adjId;
         }
 
-        public virtual void Dispose() => Destroy(this);
-
-        protected virtual void OnDestroy()
+        internal virtual void InitialNode()
         {
-            Concrete.Unregister();
-            ParentNode?.Dispose();
-            ChildNode?.Dispose();
         }
 
         internal void OnNodeReadyProcess()
@@ -74,19 +60,12 @@ namespace AceLand.NodeFramework.Mono
             // override this function to run codes required NodeTree ready
         }
 
-        public void SetId(string id)
-        {
-            var adjId = id.IsNullOrEmptyOrWhiteSpace() ? $"{nameof(T)}_{Guid.NewGuid()}" : id;
-            nodeId = adjId;
-            Id = adjId;
-        }
-
-        private MonoBehaviour FindParentNode() =>
+        internal MonoBehaviour FindParentNode() =>
             transform.parent != null && transform.parent.TryGetComponent<IMonoNode>(out var monoNode)
                 ? (MonoBehaviour)monoNode
                 : null;
 
-        private List<MonoBehaviour> FindChildNodes()
+        internal List<MonoBehaviour> FindChildNodes()
         {
             var nodes = new List<MonoBehaviour>();
             foreach (Transform child in transform)
@@ -96,6 +75,35 @@ namespace AceLand.NodeFramework.Mono
             }
 
             return nodes;
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj is not INode other) return 1;
+            if (other.Id.IsNullOrEmptyOrWhiteSpace()) return 1;
+            if (other.Id.IsNullOrEmptyOrWhiteSpace()) return 1;
+            if (GetType() != obj.GetType()) return 1;
+
+            return CompareTo(other);
+        }
+
+        public int CompareTo(INode other)
+        {
+            if (other == null) return 1;
+            if (other.Id.IsNullOrEmptyOrWhiteSpace()) return 1;
+            if (Id.IsNullOrEmptyOrWhiteSpace()) return 1;
+            if (GetType() != other.GetType()) return 1;
+            
+            return string.CompareOrdinal(Id, other.Id); 
+        }
+
+        public bool Equals(INode other)
+        {
+            if (other == null) return false;
+            if (other.Id.IsNullOrEmptyOrWhiteSpace()) return false;
+            if (Id.IsNullOrEmptyOrWhiteSpace()) return false;
+            
+            return Id == other.Id && GetType() == other.GetType();
         }
     }
 }
