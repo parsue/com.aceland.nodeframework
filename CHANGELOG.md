@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.17] - 2025-02-03
+
+### Modify
+- [MonoNode] remove test debug log from ContainerNode
+
 ## [1.0.16] - 2025-01-25
 
 ### Fixed
