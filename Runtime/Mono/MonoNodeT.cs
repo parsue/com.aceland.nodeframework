@@ -10,9 +10,11 @@ namespace AceLand.NodeFramework.Mono
     {
         public T Concrete { get; private set; }
 
+        private event Action<T> _onNodeTReady;
+
         protected virtual void Awake()
         {
-            this.InitialMonoNode();
+            this.InitialMonoNode(setAsRoot);
         }
 
         protected virtual void OnDestroy()
@@ -31,6 +33,23 @@ namespace AceLand.NodeFramework.Mono
             ParentNode = new ParentNode(Concrete);
             ChildNode = new ChildNode(Concrete);
             if (autoRegistry) Concrete.Register();
+        }
+
+        public void OnNodeReadyAction(Action<T> action)
+        {
+            if (NodeReady)
+            {
+                action?.Invoke(Concrete);
+                return;
+            }
+
+            _onNodeTReady += action;
+        }
+
+        internal override void OnNodeReadyProcess()
+        {
+            base.OnNodeReadyProcess();
+            _onNodeTReady?.Invoke(Concrete);
         }
 
         public override void SetId(string id)
