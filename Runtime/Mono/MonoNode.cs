@@ -10,6 +10,7 @@ namespace AceLand.NodeFramework.Mono
     {
         [Header("Node for Mono")]
         [SerializeField] private protected string nodeId;
+        [SerializeField] private protected bool setAsRoot;
         [SerializeField] private protected bool autoRegistry = true;
 
         public string Id { get => NodeReady ? _id : nodeId ; protected set => _id = value; }
@@ -21,7 +22,6 @@ namespace AceLand.NodeFramework.Mono
         internal ChildNode ChildNode  { get; set; }
         ChildNode INode.ChildNode => ChildNode;
 
-
         public virtual bool IsActive => gameObject.activeInHierarchy;
 
         public virtual void SetActive(bool active) => gameObject.SetActive(active);
@@ -31,6 +31,8 @@ namespace AceLand.NodeFramework.Mono
         public GameObject Go { get; protected set; }
         public Transform Tr { get; protected set; }
         public bool NodeReady { get; protected set; }
+
+        private event Action _onNodeReady;
 
         public bool AutoRegistry
         {
@@ -45,17 +47,29 @@ namespace AceLand.NodeFramework.Mono
             Id = adjId;
         }
 
+        public void OnNodeReadyAction(Action action)
+        {
+            if (NodeReady)
+            {
+                action?.Invoke();
+                return;
+            }
+
+            _onNodeReady += action;
+        }
+
         internal virtual void InitialNode()
         {
         }
 
-        internal void OnNodeReadyProcess()
+        internal virtual void OnNodeReadyProcess()
         {
+            NodeAwake();
             NodeReady = true;
-            StartAfterNodeBuilt();
+            _onNodeReady?.Invoke();
         }
 
-        protected virtual void StartAfterNodeBuilt()
+        protected virtual void NodeAwake()
         {
             // override this function to run codes required NodeTree ready
         }
