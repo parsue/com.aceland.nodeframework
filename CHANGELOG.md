@@ -2,10 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.18] - 2025-02-04
+
+### Fixed
+- [MonoNode] duplicated initial root node if no childnode.
+- [MonoNode] rename StartOnNodeReady() to NodeAwake() for correct processing meaning.
+- [MonoNode] add OnNodeReadyAction(Action) to apply actions after NodeAwake invoked.
+
 ## [1.0.17] - 2025-02-03
 
 ### Modify
-- [MonoNode] remove test debug log from ContainerNode
+- [MonoNode] remove test debug log from ContainerNode.
 
 ## [1.0.16] - 2025-01-25
 
@@ -14,7 +21,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - [MonoNode] add extension .MonoNeighbour<T>() and .MonoNeighbour<T>(id).
 ### Modify
-- [Editor] AceLand Project Setting as Tree structure
+- [Editor] AceLand Project Setting as Tree structure.
 
 ## [1.0.15] - 2025-01-14
 

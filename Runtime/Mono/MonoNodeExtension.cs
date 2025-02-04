@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AceLand.NodeFramework.Core;
@@ -8,10 +8,10 @@ namespace AceLand.NodeFramework.Mono
 {
     public static class MonoNodeExtension
     {
-        internal static void InitialMonoNode(this MonoNode monoNode)
+        internal static void InitialMonoNode(this MonoNode monoNode, bool setAsRoot = false)
         {
             if (monoNode.NodeReady) return;
-            if (monoNode.FindParentNode() != null) return;
+            if (!setAsRoot && monoNode.FindParentNode() != null) return;
             
             var allNode = new List<MonoNode>();
             var nodeList = new List<MonoNode> { monoNode };
@@ -19,13 +19,16 @@ namespace AceLand.NodeFramework.Mono
             while (nodeList.Count > 0)
             {
                 var node = nodeList[0];
+                nodeList.Remove(node);
+                if (allNode.Contains(node)) continue;
+                
                 allNode.Add(node);
                 nodeList.Remove(node);
                 
                 node.InitialNode();
                 
                 var parentNode = node.FindParentNode() as MonoNode;
-                var isRoot = parentNode == null;
+                var isRoot = setAsRoot || parentNode == null;
                 if (isRoot) node.ParentNode.SetAsRoot();
                 else node.ParentNode.Set(parentNode);
 
