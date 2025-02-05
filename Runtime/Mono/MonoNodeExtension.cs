@@ -51,7 +51,7 @@ namespace AceLand.NodeFramework.Mono
             if (node.ParentNode.Node is T parent)
                 return parent;
             
-            throw new Exception($"wrong type of {nameof(T)}");
+            throw new Exception($"wrong type of {typeof(T).Name}");
         }
 
         public static T MonoNeighbour<T>(this INode node) where T : MonoBehaviour, INode
@@ -69,7 +69,7 @@ namespace AceLand.NodeFramework.Mono
             foreach (var childNode in node.ChildNode.Nodes)
                 if (childNode is T n) return n;
             
-            throw new Exception($"ChildNode [{nameof(T)}] not find");
+            throw new Exception($"ChildNode [{typeof(T).Name}] not find");
         }
         
         public static T MonoChild<T>(this INode node, string id) where T : MonoBehaviour, INode
@@ -80,7 +80,7 @@ namespace AceLand.NodeFramework.Mono
                 if (childNode is T n) return n;
             }
             
-            throw new Exception($"ChildNode [{id}] of [{nameof(T)}] not find");
+            throw new Exception($"ChildNode [{id}] of [{typeof(T).Name}] not find");
         }
         
         public static IEnumerable<T> MonoChildren<T>(this INode node) where T : MonoBehaviour, INode
