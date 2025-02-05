@@ -42,7 +42,7 @@ namespace AceLand.NodeFramework
             if (parent is T parentNode)
                 return parentNode;
             
-            throw new Exception($"wrong type of {nameof(T)}");
+            throw new Exception($"wrong type of {typeof(T).Name}");
         }
         
         public static INode Parent(this INode node) =>
@@ -53,7 +53,7 @@ namespace AceLand.NodeFramework
             if (node.ParentNode.Node is T parent)
                 return parent;
             
-            throw new Exception($"wrong type of {nameof(T)}");
+            throw new Exception($"wrong type of {typeof(T).Name}");
         }
 
         public static void SetParent(this INode node, INode parentNode)
@@ -83,7 +83,7 @@ namespace AceLand.NodeFramework
             foreach (var childNode in node.ChildNode.Nodes)
                 if (childNode is T n) return n;
             
-            throw new Exception($"ChildNode [{nameof(T)}] not find");
+            throw new Exception($"ChildNode [{typeof(T).Name}] not find");
         }
 
         public static INode Child(this INode node, string id)
@@ -203,7 +203,7 @@ namespace AceLand.NodeFramework
             foreach (var childNode in node.Parent().ChildNode.Nodes)
                 if (childNode is T n) return n;
 
-            throw new Exception($"ChildNode [{nameof(T)}] not find");
+            throw new Exception($"ChildNode [{typeof(T).Name}] not find");
         }
 
         public static INode Neighbour(this INode node, string id)
