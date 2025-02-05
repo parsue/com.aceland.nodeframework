@@ -54,7 +54,7 @@ namespace AceLand.NodeFramework.Mono
 
         public override void SetId(string id)
         {
-            var adjId = id.IsNullOrEmptyOrWhiteSpace() ? $"{nameof(T)}_{Guid.NewGuid()}" : id;
+            var adjId = id.IsNullOrEmptyOrWhiteSpace() ? $"{typeof(T).Name}_{Guid.NewGuid()}" : id;
             nodeId = adjId;
             Id = adjId;
         }
