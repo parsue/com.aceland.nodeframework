@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AceLand.NodeFramework.Core;
+using ZLinq;
 
 namespace AceLand.NodeFramework
 {
@@ -76,11 +76,11 @@ namespace AceLand.NodeFramework
         }
         
         public static INode Child(this INode node) =>
-            node.ChildNode.Nodes.First();
+            node.ChildNode.Nodes.AsValueEnumerable().First();
 
         public static T Child<T>(this INode node) where T : class
         {
-            foreach (var childNode in node.ChildNode.Nodes)
+            foreach (var childNode in node.ChildNode.Nodes.AsValueEnumerable())
                 if (childNode is T n) return n;
             
             throw new Exception($"ChildNode [{typeof(T).Name}] not find");
@@ -88,7 +88,7 @@ namespace AceLand.NodeFramework
 
         public static INode Child(this INode node, string id)
         {
-            foreach (var childNode in node.ChildNode.Nodes)
+            foreach (var childNode in node.ChildNode.Nodes.AsValueEnumerable())
                 if (childNode.Id == id) return childNode;
             
             throw new Exception($"ChildNode [{id}] not find");
@@ -96,7 +96,7 @@ namespace AceLand.NodeFramework
 
         public static T Child<T>(this INode node, string id) where T : class
         {
-            foreach (var childNode in node.ChildNode.Nodes)
+            foreach (var childNode in node.ChildNode.Nodes.AsValueEnumerable())
             {
                 if (childNode.Id != id) continue;
                 if (childNode is T n) return n;
@@ -110,7 +110,7 @@ namespace AceLand.NodeFramework
 
         public static IEnumerable<T> Children<T>(this INode node) where T : class
         {
-            foreach (var childNode in node.ChildNode.Nodes)
+            foreach (var childNode in node.ChildNode.Nodes.AsValueEnumerable())
             {
                 if (childNode is T n) yield return n;
             }
@@ -119,7 +119,7 @@ namespace AceLand.NodeFramework
         public static IEnumerable<INode> Children(this INode node, string id)
         {
             var nodes = new List<INode>();
-            foreach (var childNode in node.ChildNode.Nodes)
+            foreach (var childNode in node.ChildNode.Nodes.AsValueEnumerable())
             {
                 if (childNode.Id != id) continue;
                 nodes.Add(childNode);
@@ -131,7 +131,7 @@ namespace AceLand.NodeFramework
         public static IEnumerable<T> Children<T>(this INode node, string id) where T : class
         {
             var nodes = new List<T>();
-            foreach (var childNode in node.ChildNode.Nodes)
+            foreach (var childNode in node.ChildNode.Nodes.AsValueEnumerable())
             {
                 if (childNode.Id != id) continue;
                 if (childNode is T n) nodes.Add(n);
@@ -175,7 +175,7 @@ namespace AceLand.NodeFramework
 
         public static void AddChildren(this INode node, params INode[] childNodes)
         {
-            foreach (var childNode in childNodes)
+            foreach (var childNode in childNodes.AsValueEnumerable())
                 node.AddChild(childNode);
         }
 
@@ -189,18 +189,18 @@ namespace AceLand.NodeFramework
 
         public static void RemoveChildren(this INode node)
         {
-            foreach (var childNode in node.ChildNode.Nodes)
+            foreach (var childNode in node.ChildNode.Nodes.AsValueEnumerable())
                 childNode.ParentNode.SetAsRoot();
             
             node.ChildNode.Clear();
         }
 
         public static INode Neighbour(this INode node) =>
-            node.Parent().ChildNode.Nodes.First();
+            node.Parent().ChildNode.Nodes.AsValueEnumerable().First();
         
         public static T Neighbour<T>(this INode node) where T : class
         {
-            foreach (var childNode in node.Parent().ChildNode.Nodes)
+            foreach (var childNode in node.Parent().ChildNode.Nodes.AsValueEnumerable())
                 if (childNode is T n) return n;
 
             throw new Exception($"ChildNode [{typeof(T).Name}] not find");
@@ -208,7 +208,7 @@ namespace AceLand.NodeFramework
 
         public static INode Neighbour(this INode node, string id)
         {
-            foreach (var childNode in node.Parent().ChildNode.Nodes)
+            foreach (var childNode in node.Parent().ChildNode.Nodes.AsValueEnumerable())
             {
                 if (childNode.Id != id) continue;
                 return childNode;
@@ -219,7 +219,7 @@ namespace AceLand.NodeFramework
 
         public static T Neighbour<T>(this INode node, string id) where T : class
         {
-            foreach (var childNode in node.ParentNode.Node.ChildNode.Nodes)
+            foreach (var childNode in node.ParentNode.Node.ChildNode.Nodes.AsValueEnumerable())
             {
                 if (childNode.Id != id) continue;
                 if (childNode is T n) return n;
@@ -234,7 +234,7 @@ namespace AceLand.NodeFramework
         public static IEnumerable<T> Neighbours<T>(this INode node) where T : class
         {
             var nodes = new List<T>();
-            foreach (var childNode in node.Parent().ChildNode.Nodes)
+            foreach (var childNode in node.Parent().ChildNode.Nodes.AsValueEnumerable())
                 if (childNode is T n) nodes.Add(n);
         
             return nodes;
@@ -243,7 +243,7 @@ namespace AceLand.NodeFramework
         public static void Traverse(this INode node, Action<INode> action)
         {
             action(node);
-            foreach (var n in node.ChildNode.Nodes)
+            foreach (var n in node.ChildNode.Nodes.AsValueEnumerable())
                 n.Traverse(action);
         }
     }
