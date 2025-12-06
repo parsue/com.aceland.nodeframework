@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+---
+
+## [2.0.1] - 2025-12-06
+### Modified
+- [package.json] add doc links
+
+## [2.0.0] - 2025-09-23
+### Modified
+- [Dependency] ZLinq installed from NuGet
+- optimize code with ZLinq
+### Removed
+- [MonoNode] permanently remove due to not effiencient with Unity GameObject hierarchy
+
+---
+
 ## [1.0.19] - 2025-02-05
 
 ### Modify
