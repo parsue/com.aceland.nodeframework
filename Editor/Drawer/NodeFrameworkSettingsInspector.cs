@@ -1,16 +1,11 @@
-﻿using AceLand.Library.Editor;
-using AceLand.NodeFramework.ProjectSetting;
+﻿using AceLand.NodeFramework.ProjectSetting;
+using AceLand.ProjectSetting.Editor;
 using UnityEditor;
 
 namespace AceLand.NodeFramework.Editor.Drawer
 {
     [CustomEditor(typeof(NodeFrameworkSettings))]
-    public class NodeFrameworkSettingsInspector : UnityEditor.Editor
+    public class NodeFrameworkSettingsInspector : AceLandSettingsInspector
     {   
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
-            EditorHelper.DrawAllPropertiesAsDisabled(serializedObject);
-        }
     }
 }
