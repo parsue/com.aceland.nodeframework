@@ -1,4 +1,6 @@
-﻿namespace AceLand.NodeFramework.Core
+﻿using AceLand.Disposable;
+
+namespace AceLand.NodeFramework.Core
 {
     internal class ParentNode : DisposableObject
     {
